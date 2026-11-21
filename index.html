@@ -580,9 +580,13 @@
                 Cancelar
             </button>
 
-            <button type="button" onclick="compartilharItensSelecionadosModoSelecao()" class="flex-1 h-11 px-3 rounded-2xl bg-white/15 hover:bg-white/25 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
+            <button type="button" onclick="abrirCategorizarMassa()" class="flex-1 h-11 px-2 rounded-2xl bg-amber-400 text-stone-900 text-xs font-black flex items-center justify-center gap-1 transition">
+                <span>🏷️</span><span class="truncate">Categorias</span>
+            </button>
+
+            <button type="button" onclick="compartilharItensSelecionadosModoSelecao()" class="flex-1 h-11 px-2 rounded-2xl bg-white/15 hover:bg-white/25 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
                 <i class="fa-solid fa-share-nodes"></i>
-                <span class="truncate">Compartilhar (<span id="qtdCompSelecao">0</span>)</span>
+                <span class="truncate">Enviar (<span id="qtdCompSelecao">0</span>)</span>
             </button>
 
             <button type="button" onclick="solicitarExclusaoSelecionados()" class="h-11 px-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-md shrink-0 transition active:scale-95">
@@ -985,6 +989,57 @@
             </div>
             <div class="p-4 pt-0">
                 <button type="button" onclick="salvarPerfilLoja()" class="w-full py-3 rounded-2xl bg-[#556B2F] text-white text-sm font-black">Salvar loja</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculadora: salvar opção no app -->
+    <div id="modalSalvarCalc" class="hidden fixed inset-0 z-50 bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharSalvarCalculadora()">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="bg-amber-700 text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
+                <div class="min-w-0"><p class="text-[10px] font-black uppercase text-amber-200">Salvar no app</p><p id="calcSalvarResumo" class="text-sm font-black truncate"></p></div>
+                <button type="button" onclick="fecharSalvarCalculadora()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg shrink-0">✕</button>
+            </div>
+            <div class="p-4 space-y-3 overflow-y-auto">
+                <div>
+                    <span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Produto</span>
+                    <input type="text" id="calcSalvarNome" autocomplete="off" oninput="renderizarSugestoesProdutoCalc()" placeholder="Ex: Whey Protein, Arroz 5kg..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <div id="calcSalvarSugestoes" onclick="escolherSugestaoProdutoCalc(event)" class="flex flex-wrap gap-1.5 mt-1.5"></div>
+                    <p class="text-[10px] font-semibold text-stone-400 mt-1">Se o produto já existe, o preço entra no ranking dele. Se não, ele é cadastrado.</p>
+                </div>
+                <div>
+                    <span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Loja</span>
+                    <input type="text" id="calcSalvarLoja" autocomplete="off" placeholder="Onde você viu esse preço" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                </div>
+                <label class="flex items-center gap-2 bg-[#EEF2E6] rounded-xl px-3 py-2.5 cursor-pointer">
+                    <input type="checkbox" id="calcSalvarLista" class="w-4 h-4 accent-[#556B2F]">
+                    <span class="text-xs font-black text-[#3F5122]">🛒 Pôr também na Lista de Compras</span>
+                </label>
+            </div>
+            <div class="p-4 pt-0">
+                <button type="button" onclick="confirmarSalvarCalculadora()" class="w-full py-3 rounded-2xl bg-[#556B2F] text-white text-sm font-black">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categorizar em massa -->
+    <div id="modalCategorizarMassa" class="hidden fixed inset-0 z-50 bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharCategorizarMassa()">
+        <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+            <div class="bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
+                <div class="min-w-0"><p class="text-[10px] font-black uppercase text-amber-200">🏷️ Categorizar em massa</p><p id="tituloCategorizarMassa" class="text-sm font-black truncate"></p></div>
+                <button type="button" onclick="fecharCategorizarMassa()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg shrink-0">✕</button>
+            </div>
+            <div class="p-4 space-y-3 overflow-y-auto">
+                <div class="flex gap-1.5">
+                    <button type="button" id="modoCatMassa-adicionar" onclick="definirModoCatMassa('adicionar')">＋ Adicionar</button>
+                    <button type="button" id="modoCatMassa-substituir" onclick="definirModoCatMassa('substituir')">⇄ Substituir</button>
+                    <button type="button" id="modoCatMassa-remover" onclick="definirModoCatMassa('remover')">− Remover</button>
+                </div>
+                <p id="dicaCategorizarMassa" class="text-[11px] font-semibold text-stone-500"></p>
+                <div id="chipsCategorizarMassa" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div class="p-4 pt-0">
+                <button type="button" onclick="aplicarCategorizarMassa()" class="w-full py-3 rounded-2xl bg-[#556B2F] text-white text-sm font-black">Aplicar</button>
             </div>
         </div>
     </div>
@@ -2105,7 +2160,7 @@
             render();
         }
         function instalarTodasSugestoesLoja() {
-            ['cadLocalInicial', 'notaLocal', 'rapidoInputLocal', 'inputNovoLocal'].forEach(instalarSugestoesLoja);
+            ['cadLocalInicial', 'notaLocal', 'rapidoInputLocal', 'inputNovoLocal', 'calcSalvarLoja'].forEach(instalarSugestoesLoja);
         }
 
         function normalizarDadosSalvos() {
@@ -2208,6 +2263,8 @@
                         fecharModalConfirmacao();
                         fecharFinalizarCompra();
                         fecharPerfilLoja();
+                        fecharSalvarCalculadora();
+                        fecharCategorizarMassa();
                         fecharListaLojas();
                         fecharModalDetalhes();
                         fecharModalPrecoRapido();
@@ -4358,7 +4415,10 @@
             const lista = document.getElementById('listaOpcoesCalc');
             if (!lista) return;
             lista.innerHTML = opcoesCalculadora.map((opt, idx) => `
-                <div id="cardCalc-${opt.id}" class="bg-white rounded-2xl border-2 border-stone-200 p-3 space-y-2 transition shadow-xs">
+                <div class="swipe-wrapper w-full" data-calc-id="${opt.id}">
+                <div class="swipe-bg-right hidden absolute inset-0 rounded-2xl bg-[#556B2F] text-white px-4 flex items-center justify-start gap-2 font-black text-xs pointer-events-none"><span class="text-base">🛒</span><span>Salvar e pôr na Lista</span></div>
+                <div class="swipe-bg-left hidden absolute inset-0 rounded-2xl bg-amber-500 text-white px-4 flex items-center justify-end gap-2 font-black text-xs pointer-events-none"><span>Salvar preço no app</span><span class="text-lg font-black">+</span></div>
+                <div id="cardCalc-${opt.id}" class="swipe-card-inner bg-white rounded-2xl border-2 border-stone-200 p-3 space-y-2 transition shadow-xs">
                     <div class="flex items-center justify-between gap-2">
                         <input type="text" value="${escaparHtml(opt.nome)}" oninput="atualizarCampoCalculadora(${opt.id}, 'nome', this.value)" class="text-xs font-black text-stone-800 bg-transparent focus:outline-none flex-1 min-w-0">
                         <span id="badgeCalc-${opt.id}" class="hidden text-[10px] font-black px-2 py-0.5 rounded-full shrink-0"></span>
@@ -4391,8 +4451,16 @@
                     </div>
                     <p id="mediaCalc-${opt.id}" class="text-[11px] font-bold text-stone-500 min-h-[16px]"></p>
                 </div>
+                </div>
             `).join('');
             atualizarResultadosCalculadora();
+            document.querySelectorAll('#listaOpcoesCalc [data-calc-id]').forEach(w => {
+                const id = Number(w.getAttribute('data-calc-id'));
+                configurarGestosSwipe(w, {
+                    aoEsquerda: () => abrirSalvarCalculadora(id, false),
+                    aoDireita: () => abrirSalvarCalculadora(id, true)
+                });
+            });
         }
 
         function atualizarResultadosCalculadora() {
@@ -4405,7 +4473,7 @@
                 const badge = document.getElementById(`badgeCalc-${opt.id}`);
                 const mediaEl = document.getElementById(`mediaCalc-${opt.id}`);
 
-                if (card) card.className = 'bg-white rounded-2xl border-2 border-stone-200 p-3 space-y-2 transition shadow-xs';
+                if (card) card.className = 'swipe-card-inner bg-white rounded-2xl border-2 border-stone-200 p-3 space-y-2 transition shadow-xs';
                 if (badge) badge.classList.add('hidden');
                 if (mediaEl) mediaEl.innerText = '';
 
@@ -4420,7 +4488,7 @@
 
             if (validas.length < 2) {
                 resumoEl.className = 'bg-white border border-stone-200 rounded-2xl p-3.5 text-center shadow-xs';
-                resumoEl.innerHTML = '<p class="text-xs font-bold text-stone-500">Digite o peso/quantidade e o preço de pelo menos 2 opções para comparar.</p>';
+                resumoEl.innerHTML = '<p class="text-xs font-bold text-stone-500">Digite o peso/quantidade e o preço de pelo menos 2 opções para comparar.</p><p class="text-[10px] font-semibold text-stone-400 mt-1">Depois deslize uma opção para salvar o preço no app.</p>';
                 return;
             }
 
@@ -4443,7 +4511,7 @@
 
                 badge.classList.remove('hidden');
                 if (idx === 0) {
-                    card.className = 'bg-emerald-50/70 rounded-2xl border-2 border-emerald-500 p-3 space-y-2 transition shadow-xs';
+                    card.className = 'swipe-card-inner bg-emerald-50 rounded-2xl border-2 border-emerald-500 p-3 space-y-2 transition shadow-xs';
                     badge.className = 'text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-600 text-white shrink-0';
                     badge.innerText = 'MELHOR 🏆';
                 } else {
@@ -4461,6 +4529,8 @@
                     ${gerarTextoMediaUnitaria(melhor.preco, melhor.qtd, melhor.opt.unidade)}
                     ${economiaPct > 0.1 ? ` • Economia de ${economiaPct.toFixed(1)}%` : ''}
                 </p>
+                <button type="button" onclick="abrirSalvarCalculadora(${melhor.opt.id}, false)" class="mt-2.5 w-full py-2.5 rounded-xl bg-white text-emerald-800 text-xs font-black active:scale-[0.99]">＋ Salvar o melhor no app</button>
+                <p class="text-[10px] font-bold text-emerald-100 mt-1.5">⬅️ Deslize uma opção: salvar preço • ➡️ salvar e pôr na Lista</p>
             `;
         }
 
@@ -5436,6 +5506,157 @@
             mostrarToast('Exemplos carregados! Depois é só excluir os que não quiser.');
         }
 
+
+        // ================= CALCULADORA → SALVAR NO APP =================
+        let calcSalvarId = null;
+
+        function abrirSalvarCalculadora(optId, comLista) {
+            const opt = opcoesCalculadora.find(o => o.id === optId);
+            if (!opt) return;
+            const qtd = parseFloat(String(opt.qtd).replace(',', '.'));
+            const preco = parseFloat(String(opt.preco).replace(',', '.'));
+            if (!(qtd > 0) || !(preco > 0)) { mostrarToast('Preencha peso/quantidade e preço dessa opção antes de salvar.'); return; }
+            calcSalvarId = optId;
+            const nomePadrao = /^op[cç][aã]o\s*\d+$/i.test(String(opt.nome).trim()) ? '' : String(opt.nome).trim();
+            document.getElementById('calcSalvarNome').value = nomePadrao;
+            document.getElementById('calcSalvarLoja').value = dadosApp.lojaAtualCompra || '';
+            document.getElementById('calcSalvarLoja').dispatchEvent(new Event('input'));
+            document.getElementById('calcSalvarLista').checked = !!comLista;
+            document.getElementById('calcSalvarResumo').innerText = `${formatarMedida(qtd, opt.unidade)} por ${formatarMoeda(preco)} • ${gerarTextoMediaUnitaria(preco, qtd, opt.unidade)}`;
+            renderizarSugestoesProdutoCalc();
+            document.getElementById('modalSalvarCalc').classList.remove('hidden');
+        }
+
+        function renderizarSugestoesProdutoCalc() {
+            const termo = normalizarTextoBusca(document.getElementById('calcSalvarNome').value || '').trim();
+            const box = document.getElementById('calcSalvarSugestoes');
+            if (!termo) { box.innerHTML = ''; return; }
+            const meus = dadosApp.itens.filter(i => normalizarTextoBusca(i.nome).includes(termo)).slice(0, 5).map(i => ({ nome: i.nome, icone: i.icone, meu: true }));
+            const nomesMeus = new Set(meus.map(m => normalizarTextoBusca(m.nome)));
+            const cat = CATALOGO_PREDEFINIDO.filter(c => normalizarTextoBusca(c.nome).includes(termo) && !nomesMeus.has(normalizarTextoBusca(c.nome))).slice(0, 5 - Math.min(5, meus.length)).map(c => ({ nome: c.nome, icone: c.icone, meu: false }));
+            box.innerHTML = [...meus, ...cat].filter(x => normalizarTextoBusca(x.nome) !== termo).map(x =>
+                `<button type="button" data-nome="${escaparHtml(x.nome)}" class="px-2.5 py-1 rounded-lg ${x.meu ? 'bg-[#EEF2E6] border-[#556B2F]/30' : 'bg-stone-100 border-stone-200'} border text-[11px] font-bold text-stone-700">${x.icone} ${escaparHtml(x.nome)}</button>`).join('');
+        }
+
+        function escolherSugestaoProdutoCalc(e) {
+            const b = e.target.closest('button[data-nome]');
+            if (!b) return;
+            document.getElementById('calcSalvarNome').value = b.dataset.nome;
+            renderizarSugestoesProdutoCalc();
+        }
+
+        function fecharSalvarCalculadora() {
+            document.getElementById('modalSalvarCalc').classList.add('hidden');
+            calcSalvarId = null;
+        }
+
+        function confirmarSalvarCalculadora() {
+            const opt = opcoesCalculadora.find(o => o.id === calcSalvarId);
+            if (!opt) return;
+            const nome = (document.getElementById('calcSalvarNome').value || '').trim();
+            const loja = (document.getElementById('calcSalvarLoja').value || '').trim();
+            if (!nome) { mostrarToast('Digite o nome do produto.'); return; }
+            if (!loja) { mostrarToast('Informe a loja.'); return; }
+            const qtd = normalizarQtdNumero(opt.qtd);
+            const unidade = limparUnidade(opt.unidade);
+            const preco = parseFloat(String(opt.preco).replace(',', '.'));
+
+            let item = dadosApp.itens.find(i => normalizarTextoBusca(i.nome) === normalizarTextoBusca(nome));
+            let novo = false;
+            if (!item) {
+                const doCatalogo = CATALOGO_PREDEFINIDO.find(c => normalizarTextoBusca(c.nome) === normalizarTextoBusca(nome));
+                const cats = doCatalogo ? [...doCatalogo.categorias] : ['Supermercado'];
+                item = {
+                    id: String(Date.now() + Math.floor(Math.random() * 10000)),
+                    nome,
+                    categoria: cats[0],
+                    categorias: cats,
+                    unidade: doCatalogo ? doCatalogo.unidade : unidade,
+                    quantidade: doCatalogo ? normalizarQtdNumero(doCatalogo.qtd) : qtd,
+                    icone: doCatalogo ? doCatalogo.icone : '🏷️',
+                    precos: {},
+                    historico: [],
+                    listasIds: [],
+                    qtdCompra: 1,
+                    criadoEm: Date.now()
+                };
+                dadosApp.itens.unshift(item);
+                novo = true;
+            }
+            const alerta = novo ? null : analisarVariacaoPreco(item, loja, preco, qtd, unidade);
+            registrarPrecoNoItem(item, loja, preco, qtd, unidade, '', false);
+            const naLista = document.getElementById('calcSalvarLista').checked;
+            if (naLista) setItemNaLista(item, true);
+            salvarDadosLocais();
+            atualizarSugestoesLojas();
+            atualizarDropdownsFiltro();
+            atualizarBadgeCompras();
+            renderizarProdutos();
+            fecharSalvarCalculadora();
+            const idItem = item.id;
+            const base = alerta ? alerta.texto : `${item.icone} "${item.nome}" ${novo ? 'cadastrado' : 'atualizado'} com o preço de ${loja}.`;
+            mostrarToast(base + (naLista ? ' 🛒 Na lista!' : ''), () => abrirGraficoItem(idItem), '👆 Toque para ver o item e o gráfico');
+        }
+
+        // ================= CATEGORIZAR EM MASSA (SELEÇÃO) =================
+        let catsMassa = new Set();
+        let modoCatsMassa = 'adicionar';
+
+        function abrirCategorizarMassa() {
+            if (idsSelecionados.size === 0) return;
+            catsMassa = new Set();
+            modoCatsMassa = 'adicionar';
+            renderizarCategorizarMassa();
+            document.getElementById('modalCategorizarMassa').classList.remove('hidden');
+        }
+
+        function renderizarCategorizarMassa() {
+            const qtd = idsSelecionados.size;
+            document.getElementById('tituloCategorizarMassa').innerText = `${qtd} ${qtd === 1 ? 'item selecionado' : 'itens selecionados'}`;
+            ['adicionar', 'substituir', 'remover'].forEach(m => {
+                const b = document.getElementById('modoCatMassa-' + m);
+                if (b) b.className = `flex-1 py-2 rounded-xl text-[11px] font-black ${modoCatsMassa === m ? 'bg-[#556B2F] text-white' : 'bg-stone-100 text-stone-600'}`;
+            });
+            const dicas = {
+                adicionar: 'As categorias marcadas serão somadas às que os itens já têm.',
+                substituir: 'Os itens ficarão só com as categorias marcadas.',
+                remover: 'As categorias marcadas serão tiradas dos itens (cada item mantém pelo menos 1).'
+            };
+            document.getElementById('dicaCategorizarMassa').innerText = dicas[modoCatsMassa];
+            const todas = Array.from(new Set([...obterCategoriasAtivas(), ...dadosApp.itens.filter(i => idsSelecionados.has(i.id)).flatMap(obterCategoriasDoItem)]));
+            document.getElementById('chipsCategorizarMassa').innerHTML = todas.map(cat => {
+                const ativa = catsMassa.has(cat);
+                return `<button type="button" onclick="alternarCatMassa('${escaparAtributoJs(cat)}')" class="px-2.5 py-1.5 rounded-xl border text-[11px] font-extrabold ${ativa ? 'bg-[#556B2F] border-transparent text-white' : 'bg-white border-stone-200 text-stone-700'}">${ativa ? '✓ ' : ''}${escaparHtml(cat)}</button>`;
+            }).join('');
+        }
+
+        function definirModoCatMassa(m) { modoCatsMassa = m; renderizarCategorizarMassa(); }
+        function alternarCatMassa(cat) { if (catsMassa.has(cat)) catsMassa.delete(cat); else catsMassa.add(cat); renderizarCategorizarMassa(); }
+        function fecharCategorizarMassa() { document.getElementById('modalCategorizarMassa').classList.add('hidden'); }
+
+        function aplicarCategorizarMassa() {
+            if (catsMassa.size === 0) { mostrarToast('Marque pelo menos 1 categoria.'); return; }
+            const marcadas = Array.from(catsMassa);
+            let alterados = 0;
+            dadosApp.itens.forEach(item => {
+                if (!idsSelecionados.has(item.id)) return;
+                const atuais = obterCategoriasDoItem(item);
+                let novas;
+                if (modoCatsMassa === 'substituir') novas = [...marcadas];
+                else if (modoCatsMassa === 'adicionar') novas = Array.from(new Set([...atuais, ...marcadas]));
+                else { novas = atuais.filter(c => !catsMassa.has(c)); if (!novas.length) novas = [atuais[0]]; }
+                if (novas.join('|') !== atuais.join('|')) alterados++;
+                item.categorias = novas;
+                item.categoria = novas[0];
+            });
+            salvarDadosLocais();
+            fecharCategorizarMassa();
+            encerrarModoSelecao();
+            atualizarDropdownsFiltro();
+            renderizarProdutos();
+            mostrarToast(`🏷️ Categorias atualizadas em ${alterados} ${alterados === 1 ? 'item' : 'itens'}.`);
+        }
+
         // ================= CATEGORIAS NO PREÇO RÁPIDO =================
         function renderizarCategoriasRapido() {
             const item = dadosApp.itens.find(i => i.id === itemIdPrecoRapido);
@@ -6102,7 +6323,16 @@
         // Só registra o modo offline quando o app está hospedado (https), não em arquivo local nem dentro de visualizador
         if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol) && !estaEmVisualizador()) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(err => console.warn('Modo offline indisponível:', err));
+                navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+                    .then(reg => { try { reg.update(); } catch (_) {} })
+                    .catch(err => console.warn('Modo offline indisponível:', err));
+                // Quando uma versão nova do app assume, recarrega uma vez para já mostrar a atualização
+                let jaRecarregou = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (jaRecarregou) return;
+                    jaRecarregou = true;
+                    location.reload();
+                });
             });
         }
         function fecharModalInstalar() { document.getElementById('modalInstalar').classList.add('hidden'); }

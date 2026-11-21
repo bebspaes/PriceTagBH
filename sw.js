@@ -1,6 +1,6 @@
 // Price Tag – modo offline
 // Ao publicar uma versão nova do app, troque o número abaixo para os celulares baixarem a atualização.
-const VERSAO = 'price-tag-v2';
+const VERSAO = 'price-tag-v4';
 const ARQUIVOS_BASE = [
   './',
   './index.html',
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (event) => {
   // Página do app: tenta a internet primeiro (pega a versão nova); sem internet, usa a guardada
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'no-cache' }) // sempre confere no servidor se há versão nova
         .then((resp) => {
           const copia = resp.clone();
           caches.open(VERSAO).then((cache) => cache.put('./index.html', copia));
