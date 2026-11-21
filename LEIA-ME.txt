@@ -1,0 +1,40 @@
+PRICE TAG – COMO PUBLICAR E INSTALAR COMO APP
+=============================================
+
+O que tem nesta pasta
+- index.html ............ o app
+- manifest.webmanifest .. nome, cores e ícones do app instalado
+- sw.js ................. modo offline (abre sem internet)
+- icons/ ................ ícones do app
+
+IMPORTANTE: mantenha todos os arquivos juntos, nesta mesma estrutura.
+
+1) PUBLICAR (grátis) – jeito mais fácil: Netlify Drop
+   a. No computador, descompacte este .zip.
+   b. Abra https://app.netlify.com/drop
+   c. Arraste a PASTA "price-tag-pwa" para a página.
+   d. Pronto: você recebe um link https://algum-nome.netlify.app
+   e. Crie uma conta grátis no Netlify para o link não expirar e
+      para poder trocar o nome (ex.: pricetag-bh.netlify.app).
+
+   Alternativa: GitHub Pages (crie um repositório, envie os arquivos
+   e ative Settings > Pages).
+
+2) INSTALAR NO CELULAR
+   - Android (Chrome): abra o link > menu ⋮ > "Instalar app"
+     (ou, dentro do app, botão de celular no topo > "Instalar agora").
+   - iPhone (Safari): abra o link > Compartilhar > "Adicionar à Tela de Início".
+
+3) LEVAR SEUS DADOS PARA O APP PUBLICADO
+   Os dados ficam guardados no aparelho, separados por endereço.
+   No app antigo: botão de download no topo > exportar backup.
+   No app publicado: mesmo botão > importar o arquivo de backup.
+
+4) PUBLICAR UMA VERSÃO NOVA
+   a. Troque o index.html pelo novo.
+   b. Em sw.js, mude  price-tag-v1  para  price-tag-v2  (v3, v4...).
+   c. Arraste a pasta de novo no Netlify (no mesmo site).
+   Os celulares pegam a versão nova na próxima vez que abrirem com internet.
+
+Observação: a leitura de nota por foto e por QR Code precisa de internet
+na primeira vez (baixa o leitor); depois disso fica guardada.
