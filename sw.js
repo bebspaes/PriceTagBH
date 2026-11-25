@@ -1,6 +1,6 @@
 // Price Tag – modo offline
 // Ao publicar uma versão nova do app, troque o número abaixo para os celulares baixarem a atualização.
-const VERSAO = 'price-tag-v4';
+const VERSAO = 'price-tag-v5';
 const ARQUIVOS_BASE = [
   './',
   './index.html',

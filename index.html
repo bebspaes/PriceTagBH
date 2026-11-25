@@ -1726,6 +1726,7 @@
         // Estado interno dos detalhes
         let chaveHistoricoAberto = null;
         let chaveEditandoPreco = null;
+        let idxHistoricoEditando = null;
         let chaveEditandoMarca = null;
         let nomeItemExpandido = false;
         let toastTimer = null;
@@ -2257,6 +2258,7 @@
                 }
 
                 document.addEventListener('click', () => fecharTodosDropdownsFiltro());
+                instalarBotaoVoltar();
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         fecharTodosDropdownsFiltro();
@@ -2295,6 +2297,10 @@
         function selecionarAba(nomeAba) {
             if (dadosApp.modoFacil && nomeAba === 'nota') {
                 nomeAba = 'principal';
+            }
+            if (!voltandoAba && typeof pilhaAbas !== 'undefined' && abaAtual && abaAtual !== nomeAba) {
+                pilhaAbas.push(abaAtual);
+                if (pilhaAbas.length > 20) pilhaAbas.shift();
             }
             abaAtual = nomeAba;
             const abas = ['principal', 'cadastro', 'compras', 'calculadora', 'nota'];
@@ -3137,6 +3143,7 @@
         }
 
         function fecharModalDetalhes() {
+            idxHistoricoEditando = null;
             document.getElementById('modalDetalhesItem')?.classList.add('hidden');
             itemIdEmEdicao = null;
             chaveHistoricoAberto = null;
@@ -3339,9 +3346,40 @@
                                 }
                             }
                             const medHist = formatarMedida(h.quantidade, h.unidade);
+                            const editandoEste = idxHistoricoEditando === h.idxOriginal;
+                            const uniAtual = String(h.unidade || '').toLowerCase();
+                            const opcoesUni = [['g', 'g'], ['kg', 'kg'], ['ml', 'ml'], ['L', 'L'], ['un', 'un'], ['cáps', 'cáps']]
+                                .map(([v, t]) => `<option value="${v}" ${uniAtual === v.toLowerCase() ? 'selected' : ''}>${t}</option>`).join('');
+                            const unicoRegistroDoItem = (item.historico || []).length === 1;
+                            const formEdicao = editandoEste ? `
+                                <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 space-y-2 mb-1 anim-fade-up">
+                                    <p class="text-[10px] font-black uppercase text-amber-800">✎ Corrigir registro de ${escaparHtml(h.data || '')}</p>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Preço (R$)</label>
+                                            <input type="text" inputmode="decimal" id="histEditPreco" value="${String(Number(h.preco).toFixed(2)).replace('.', ',')}" class="w-full h-9 bg-white border-2 border-amber-400 rounded-lg px-2 text-sm font-black text-stone-900 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Peso/Qtd</label>
+                                            <input type="text" inputmode="decimal" id="histEditQtd" value="${String(h.quantidade).replace('.', ',')}" class="w-full h-9 bg-white border border-stone-200 rounded-lg px-2 text-sm font-bold text-stone-800 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Unidade</label>
+                                            <select id="histEditUni" class="w-full h-9 bg-white border border-stone-200 rounded-lg px-1 text-sm font-bold text-stone-800">${opcoesUni}</select>
+                                        </div>
+                                    </div>
+                                    <label class="flex items-center gap-2 text-[11px] font-bold text-stone-600">
+                                        <input type="checkbox" id="histEditRef" ${unicoRegistroDoItem ? 'checked' : ''} class="w-4 h-4 accent-[#556B2F]">
+                                        Usar também como medida de referência do item (hoje: ${refTexto})
+                                    </label>
+                                    <div class="flex gap-2">
+                                        <button type="button" onclick="cancelarEdicaoHistorico(event)" class="flex-1 h-9 rounded-lg bg-white border border-stone-200 text-xs font-black text-stone-600">Cancelar</button>
+                                        <button type="button" onclick="salvarEdicaoHistorico(event, ${h.idxOriginal})" class="flex-1 h-9 rounded-lg bg-[#556B2F] text-white text-xs font-black">Salvar correção</button>
+                                    </div>
+                                </div>` : '';
 
                             return `
-                                <div class="flex items-center justify-between gap-2 py-2 border-b border-stone-100 last:border-b-0">
+                                <div class="flex items-center justify-between gap-2 py-2 ${editandoEste ? '' : 'border-b border-stone-100 last:border-b-0'}">
                                     <div class="min-w-0 flex-1">
                                         <p class="text-xs font-bold text-stone-700 truncate">
                                             ${escaparHtml(h.data || '')} • ${medHist}${h.marca ? ` • ${escaparHtml(h.marca)}` : ''}
@@ -3350,11 +3388,13 @@
                                     <div class="flex items-center gap-1.5 shrink-0">
                                         <span class="text-xs font-black text-stone-900">${formatarMoeda(h.preco)}</span>
                                         <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${badgeHistClasse}">${textoDiff}</span>
+                                        <button type="button" onclick="abrirEdicaoHistorico(event, ${h.idxOriginal})" title="Corrigir preço e peso" class="w-7 h-7 rounded-full ${editandoEste ? 'bg-amber-400 text-stone-900' : 'bg-stone-100 hover:bg-stone-200 text-stone-600'} flex items-center justify-center transition text-[12px] font-black">✎</button>
                                         <button type="button" onclick="solicitarExclusaoHistorico(event, ${h.idxOriginal})" title="Apagar este registro" class="w-7 h-7 rounded-full bg-rose-50 hover:bg-rose-100 text-rose-500 flex items-center justify-center transition">
                                             <i class="fa-solid fa-trash-can text-[10px]"></i>
                                         </button>
                                     </div>
                                 </div>
+                                ${formEdicao}
                             `;
                         }).join('');
 
@@ -3902,7 +3942,7 @@
                 return `
                     <div class="swipe-wrapper w-full" data-cat-idx="${prod.idx}">
                         ${renderCamadasFundoSwipeBase(naLista, 'rounded-2xl')}
-                        <div ${naHome ? `onclick="aoClicarItemCatalogo(${prod.idx})"` : ''} class="swipe-card-inner w-full min-w-0 rounded-2xl border ${bgCard} p-2.5 flex items-center justify-between gap-2 ${naHome ? 'cursor-pointer' : ''}">
+                        <div onclick="aoClicarItemCatalogo(${prod.idx})" class="swipe-card-inner w-full min-w-0 rounded-2xl border ${bgCard} p-2.5 flex items-center justify-between gap-2 cursor-pointer active:scale-[0.99]">
                             <div class="flex items-center gap-2.5 min-w-0 flex-1">
                                 <span class="text-2xl shrink-0 leading-none">${prod.icone}</span>
                                 <div class="min-w-0 flex-1">
@@ -3920,7 +3960,7 @@
                                 ${naHome ? `
                                     <span title="Já está no Principal • toque para cadastrar preço" class="h-9 px-2.5 rounded-full bg-[#556B2F]/15 text-[#556B2F] text-[11px] font-black flex items-center justify-center gap-1 whitespace-nowrap">✓ R$</span>
                                 ` : `
-                                    <button type="button" onclick="adicionarItemPredefinidoNaHome(${prod.idx})" title="Adicionar ao Principal" class="cor-primaria-bg bg-[#556B2F] hover:opacity-95 text-white h-9 w-9 rounded-full text-2xl leading-none font-black flex items-center justify-center shadow-2xs transition active:scale-90">+</button>
+                                    <button type="button" onclick="event.stopPropagation(); adicionarItemPredefinidoNaHome(${prod.idx})" title="Adicionar ao Principal" class="cor-primaria-bg bg-[#556B2F] hover:opacity-95 text-white h-9 w-9 rounded-full text-2xl leading-none font-black flex items-center justify-center shadow-2xs transition active:scale-90">+</button>
                                 `}
                             </div>
                         </div>
@@ -5492,6 +5532,7 @@
             const prod = CATALOGO_PREDEFINIDO[idx];
             const existente = prod ? encontrarItemNaHomePorNome(prod.nome) : null;
             if (existente && !existente.somenteLista) abrirModalPrecoRapido(null, existente.id);
+            else adicionarItemPredefinidoNaHome(idx); // ainda não está no Principal: tocar na linha cadastra
         }
 
         // App zerado: carrega itens de exemplo só se a pessoa pedir
@@ -5655,6 +5696,142 @@
             atualizarDropdownsFiltro();
             renderizarProdutos();
             mostrarToast(`🏷️ Categorias atualizadas em ${alterados} ${alterados === 1 ? 'item' : 'itens'}.`);
+        }
+
+
+        // ================= CORRIGIR REGISTRO DO HISTÓRICO =================
+        function abrirEdicaoHistorico(event, idx) {
+            if (event) event.stopPropagation();
+            idxHistoricoEditando = (idxHistoricoEditando === idx) ? null : idx;
+            renderizarDetalhesItem();
+            if (idxHistoricoEditando !== null) setTimeout(() => {
+                const el = document.getElementById('histEditPreco');
+                if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); el.focus(); el.select && el.select(); }
+            }, 80);
+        }
+
+        function cancelarEdicaoHistorico(event) {
+            if (event) event.stopPropagation();
+            idxHistoricoEditando = null;
+            renderizarDetalhesItem();
+        }
+
+        // Refaz o preço atual (ranking) de cada loja/embalagem a partir do último registro do histórico
+        function reconstruirPrecoDaChave(item, chave) {
+            const regs = (item.historico || []).filter(h => (h.chave || gerarChaveEntrada(h.local, h.quantidade, h.unidade)) === chave);
+            if (!regs.length) { delete item.precos[chave]; return; }
+            const u = regs[regs.length - 1];
+            item.precos[chave] = { local: u.local, preco: Number(u.preco), promocao: !!u.promocao, quantidade: u.quantidade, unidade: u.unidade, marca: u.marca || '' };
+        }
+
+        function salvarEdicaoHistorico(event, idx) {
+            if (event) event.stopPropagation();
+            const item = dadosApp.itens.find(i => i.id === itemIdEmEdicao);
+            if (!item || !item.historico || !item.historico[idx]) return;
+            const reg = item.historico[idx];
+            const preco = numeroBr(document.getElementById('histEditPreco')?.value);
+            const qtd = numeroBr(document.getElementById('histEditQtd')?.value);
+            const uni = limparUnidade(document.getElementById('histEditUni')?.value || reg.unidade);
+            if (!(preco > 0)) { mostrarToast('Digite um preço válido.'); return; }
+            if (!(qtd > 0)) { mostrarToast('Digite um peso/quantidade válido.'); return; }
+
+            const chaveAntiga = reg.chave || gerarChaveEntrada(reg.local, reg.quantidade, reg.unidade);
+            // Se a nova embalagem já existe nessa loja, junta na mesma linha do ranking
+            const chaveIgual = Object.keys(item.precos).find(k => k !== chaveAntiga &&
+                item.precos[k].local.toLowerCase() === reg.local.toLowerCase() && mesmaMedidaEmbalagem(item.precos[k].quantidade, item.precos[k].unidade, qtd, uni));
+            const mudouMedida = !mesmaMedidaEmbalagem(reg.quantidade, reg.unidade, qtd, uni);
+            const chaveNova = chaveIgual || (mudouMedida ? gerarChaveEntrada(reg.local, qtd, uni) : chaveAntiga);
+
+            reg.preco = Math.round(preco * 100) / 100;
+            reg.quantidade = normalizarQtdNumero(qtd);
+            reg.unidade = uni;
+            reg.chave = chaveNova;
+
+            // Os outros registros da mesma embalagem acompanham a correção de medida
+            if (mudouMedida && !chaveIgual) {
+                item.historico.forEach(h => {
+                    if (h !== reg && (h.chave || gerarChaveEntrada(h.local, h.quantidade, h.unidade)) === chaveAntiga) {
+                        h.quantidade = reg.quantidade; h.unidade = reg.unidade; h.chave = chaveNova;
+                    }
+                });
+            }
+            reconstruirPrecoDaChave(item, chaveAntiga);
+            reconstruirPrecoDaChave(item, chaveNova);
+
+            if (document.getElementById('histEditRef')?.checked) {
+                item.quantidade = reg.quantidade;
+                item.unidade = reg.unidade;
+            }
+            if (chaveHistoricoAberto === chaveAntiga) chaveHistoricoAberto = chaveNova;
+            idxHistoricoEditando = null;
+            salvarDadosLocais();
+            atualizarDropdownsFiltro();
+            renderizarDetalhesItem();
+            renderizarProdutos();
+            mostrarToast('✎ Registro corrigido!');
+        }
+
+        // ================= BOTÃO VOLTAR DO CELULAR =================
+        const pilhaAbas = [];
+        let voltandoAba = false;
+        let avisoSairAtivo = false;
+
+        function modalVisivel(id) {
+            const el = document.getElementById(id);
+            return !!el && !el.classList.contains('hidden');
+        }
+
+        // Fecha o que estiver aberto por cima, ou volta para a aba anterior. Retorna false se não havia nada.
+        function voltarDentroDoApp() {
+            const ordem = [
+                ['modalConfirmacao', () => fecharModalConfirmacao()],
+                ['modalCorteNota', () => fecharCorteNota()],
+                ['modalCategorizarMassa', () => fecharCategorizarMassa()],
+                ['modalSalvarCalc', () => fecharSalvarCalculadora()],
+                ['modalPerfilLoja', () => fecharPerfilLoja()],
+                ['modalListaLojas', () => fecharListaLojas()],
+                ['modalFinalizarCompra', () => fecharFinalizarCompra()],
+                ['modalPrecoRapido', () => fecharModalPrecoRapido()],
+                ['modalDetalhesItem', () => fecharModalDetalhes()],
+                ['modalGrupo', () => fecharModalGrupo()],
+                ['modalBackup', () => fecharModalBackup()],
+                ['modalInstalar', () => fecharModalInstalar()]
+            ];
+            for (const [id, fechar] of ordem) {
+                if (modalVisivel(id)) { fechar(); return true; }
+            }
+            if (modoSelecaoAtivo) { encerrarModoSelecao(); return true; }
+            if (abaAtual !== 'principal') {
+                let anterior = pilhaAbas.pop();
+                while (anterior && anterior === abaAtual) anterior = pilhaAbas.pop();
+                voltandoAba = true;
+                try { selecionarAba(anterior || 'principal'); } finally { voltandoAba = false; }
+                window.scrollTo(0, 0);
+                return true;
+            }
+            return false;
+        }
+
+        function instalarBotaoVoltar() {
+            if (!window.history || !history.pushState || estaEmVisualizador()) return;
+            try {
+                history.replaceState({ priceTag: 'base' }, '');
+                history.pushState({ priceTag: 'app' }, '');
+            } catch (_) { return; }
+            window.addEventListener('popstate', () => {
+                if (voltarDentroDoApp()) {
+                    history.pushState({ priceTag: 'app' }, '');
+                    return;
+                }
+                if (!avisoSairAtivo) {
+                    avisoSairAtivo = true;
+                    mostrarToast('Toque em voltar de novo para sair do app.');
+                    history.pushState({ priceTag: 'app' }, '');
+                    setTimeout(() => { avisoSairAtivo = false; }, 2500);
+                    return;
+                }
+                history.back(); // segundo toque: sai do app
+            });
         }
 
         // ================= CATEGORIAS NO PREÇO RÁPIDO =================
