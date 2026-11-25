@@ -4031,7 +4031,7 @@
 
                             <div class="flex items-center shrink-0">
                                 ${naHome ? `
-                                    <span title="Já está no Principal • toque para cadastrar preço" class="h-9 px-2.5 rounded-full bg-[#556B2F]/15 text-[#556B2F] text-[11px] font-black flex items-center justify-center gap-1 whitespace-nowrap">✓ R$</span>
+                                    <button type="button" onclick="removerItemDoCadastro(event, ${prod.idx})" title="Tirar do Principal" class="h-11 w-11 rounded-full bg-rose-50 border border-rose-200 text-rose-500 flex items-center justify-center transition active:scale-90"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg></button>
                                 ` : `
                                     <button type="button" onclick="event.stopPropagation(); adicionarItemPredefinidoNaHome(${prod.idx})" title="Adicionar ao Principal" class="cor-primaria-bg bg-[#556B2F] hover:opacity-95 text-white h-9 w-9 rounded-full text-2xl leading-none font-black flex items-center justify-center shadow-2xs transition active:scale-90">+</button>
                                 `}
@@ -6441,6 +6441,30 @@
             const fn = acaoConfirmacaoPendente;
             fecharModalConfirmacao();
             if (typeof fn === 'function') fn();
+        }
+
+        // Cadastro: desfaz um "+" tocado sem querer
+        function removerItemDoCadastro(event, idx) {
+            if (event) event.stopPropagation();
+            const prod = CATALOGO_PREDEFINIDO[idx];
+            const item = prod ? encontrarItemNaHomePorNome(prod.nome) : null;
+            if (!item) return;
+            const remover = () => {
+                dadosApp.itens = dadosApp.itens.filter(i => i.id !== item.id);
+                salvarDadosLocais();
+                atualizarDropdownsFiltro();
+                atualizarBadgeCompras();
+                renderizarProdutos();
+                renderizarCatalogoPronto();
+                mostrarToast(`"${item.nome}" saiu do Principal.`);
+            };
+            const qtdPrecos = (item.historico || []).length || Object.keys(item.precos || {}).length;
+            if (qtdPrecos === 0) { remover(); return; } // recém-adicionado, sem preço: apaga direto
+            abrirModalConfirmacao(
+                `Tirar "${item.nome}" do Principal?`,
+                `Ele tem ${qtdPrecos} ${qtdPrecos === 1 ? 'preço registrado' : 'preços registrados'}, que serão apagados junto.`,
+                remover
+            );
         }
 
         function excluirItemAtual() {
