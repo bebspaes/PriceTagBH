@@ -203,7 +203,8 @@
             <!-- Barra de Busca + Apenas as Duas Listas (Modo Completo) -->
             <div id="filtrosSticky" class="ocultar-modo-facil sticky z-20 w-full -mx-3.5 px-3.5 py-2 bg-[#F7F5F0]" style="top: var(--altura-header, 120px); width: calc(100% + 1.75rem);">
                 <!-- Filtros Suspensos Múltiplos (Ocultos no Modo Fácil) -->
-                <div id="filtrosSecundariosBox" class="ocultar-modo-facil grid grid-cols-3 gap-2 w-full">
+                <div id="filtrosSecundariosBox" class="ocultar-modo-facil grid gap-2 w-full" style="grid-template-columns: auto 1fr 1fr 1fr;">
+                    <button type="button" id="btnFiltroFavoritos" onclick="event.stopPropagation(); alternarFiltroFavoritos()" title="Mostrar só favoritos" class="h-9 w-9 rounded-xl border text-base font-black flex items-center justify-center shadow-xs bg-white border-stone-200 text-stone-400">☆</button>
                     <!-- Categorias (Múltipla Seleção) -->
                     <div class="relative min-w-0" id="wrapperFiltroCategoria">
                         <button type="button" onclick="toggleDropdownFiltro(event, 'categoria')" class="w-full h-9 bg-white border border-stone-200 rounded-xl px-2.5 text-xs font-bold text-stone-700 shadow-xs flex items-center justify-between gap-1 hover:border-[#556B2F] transition">
@@ -580,6 +581,8 @@
                 Cancelar
             </button>
 
+            <button type="button" onclick="favoritarSelecionados()" title="Favoritar selecionados" class="h-11 w-11 rounded-2xl bg-white/15 hover:bg-white/25 text-amber-300 text-lg font-black flex items-center justify-center shrink-0 transition">★</button>
+
             <button type="button" onclick="abrirCategorizarMassa()" class="flex-1 h-11 px-2 rounded-2xl bg-amber-400 text-stone-900 text-xs font-black flex items-center justify-center gap-1 transition">
                 <span>🏷️</span><span class="truncate">Categorias</span>
             </button>
@@ -692,6 +695,7 @@
                         <!-- Visualização do Título -->
                         <div id="boxTituloVisualizacao" class="flex items-center gap-1.5 min-w-0">
                             <h2 id="detalheNome" onclick="alternarExpansaoNomeItem()" title="Toque para ver o nome completo" class="text-base sm:text-lg font-black leading-snug truncate cursor-pointer">Nome do Produto</h2>
+                            <button type="button" id="btnFavoritoDetalhe" onclick="alternarFavoritoDetalhe(event)" title="Favoritar" class="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-base leading-none shrink-0 transition text-amber-300">☆</button>
                             <button type="button" onclick="abrirEdicaoNomeItem(event)" title="Editar nome do item" class="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 flex items-center justify-center text-xs shrink-0 transition">
                                 <i class="fa-solid fa-pencil"></i>
                             </button>
@@ -2047,6 +2051,7 @@
                     <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">${chips}
                         <button type="button" onclick="abrirFormLista('nova')" class="shrink-0 px-3 py-1.5 rounded-xl text-xs font-black border-2 border-dashed border-[#556B2F] text-[#556B2F] bg-white">＋ Nova lista</button>
                     </div>
+                    <button type="button" onclick="porFavoritosNaLista()" class="w-full py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-black">⭐ Pôr meus favoritos nesta lista</button>
                     <div class="flex items-center gap-2 text-[11px] font-bold">
                         <button type="button" onclick="abrirFormLista('renomear')" class="text-stone-500 underline">Renomear</button>
                         ${dadosApp.listasCompras.length > 1 ? `<button type="button" onclick="excluirListaAtiva()" class="text-rose-500 underline">Excluir esta lista</button>` : ''}
@@ -2259,6 +2264,7 @@
 
                 document.addEventListener('click', () => fecharTodosDropdownsFiltro());
                 instalarBotaoVoltar();
+                atualizarBotaoFiltroFavoritos();
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         fecharTodosDropdownsFiltro();
@@ -2513,6 +2519,7 @@
 
             let filtrados = dadosApp.itens.filter(item => {
                 if (item.somenteLista) return false;
+                if (dadosApp.filtroFavoritos && !item.favorito) return false;
                 if (termo) {
                     const cats = obterCategoriasDoItem(item).join(' ');
                     const ranking = obterRankingItem(item);
@@ -2532,7 +2539,8 @@
                 return true;
             });
 
-            filtrados.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'));
+            // A–Z sempre; na busca, os favoritos vêm primeiro
+            filtrados.sort((a, b) => (termo ? ((b.favorito ? 1 : 0) - (a.favorito ? 1 : 0)) : 0) || a.nome.localeCompare(b.nome, 'pt-BR'));
 
             return filtrados;
         }
@@ -2550,6 +2558,13 @@
                 const semItens = !dadosApp.itens.some(i => !i.somenteLista);
                 document.getElementById('vazioInicio')?.classList.toggle('hidden', !semItens);
                 document.getElementById('vazioFiltros')?.classList.toggle('hidden', semItens);
+                const vf = document.getElementById('vazioFiltros');
+                if (vf) {
+                    if (!vf.dataset.original) vf.dataset.original = vf.innerHTML;
+                    vf.innerHTML = (!semItens && dadosApp.filtroFavoritos)
+                        ? '<div class="text-4xl mb-2">⭐</div><h3 class="text-base font-extrabold text-stone-800">Nenhum favorito encontrado</h3><p class="text-xs text-stone-500 mt-1">Toque na ★ amarela dos filtros para ver todos os itens.</p>'
+                        : vf.dataset.original;
+                }
                 vazio.classList.remove('hidden');
                 return;
             }
@@ -2633,7 +2648,10 @@
                         ${modoSelecaoAtivo ? renderIndicadorSelecao(selecionado) : renderBotaoCestinha(item, 'w-9 h-9')}
                         <span class="text-2xl shrink-0 leading-none">${item.icone}</span>
                         <div class="min-w-0 flex-1">
-                            <h3 class="text-sm font-black text-stone-900 leading-tight truncate">${escaparHtml(item.nome)}</h3>
+                            <div class="flex items-center gap-1 min-w-0">
+                                <h3 class="text-sm font-black text-stone-900 leading-tight truncate">${escaparHtml(item.nome)}</h3>
+                                ${modoSelecaoAtivo ? (item.favorito ? '<span class="text-amber-500 text-sm shrink-0">★</span>' : '') : `<button type="button" onclick="alternarFavorito(event, '${item.id}')" title="${item.favorito ? 'Tirar dos favoritos' : 'Favoritar'}" class="shrink-0 w-6 h-6 -my-1 flex items-center justify-center text-base leading-none ${item.favorito ? 'text-amber-500' : 'text-stone-300'}">${item.favorito ? '★' : '☆'}</button>`}
+                            </div>
                             ${melhor ? `
                                 <p class="text-xs font-extrabold text-[#556B2F] truncate mt-0.5">
                                     <i class="fa-solid fa-store text-[10px] mr-1 opacity-80"></i>1º ${escaparHtml(melhor.local)}
@@ -2667,6 +2685,7 @@
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-1.5 min-w-0">
                                 <h3 class="text-sm font-black text-stone-900 truncate">${escaparHtml(item.nome)}</h3>
+                                ${modoSelecaoAtivo ? (item.favorito ? '<span class="text-amber-500 text-sm shrink-0">★</span>' : '') : `<button type="button" onclick="alternarFavorito(event, '${item.id}')" title="${item.favorito ? 'Tirar dos favoritos' : 'Favoritar'}" class="shrink-0 w-6 h-6 -my-1 flex items-center justify-center text-base leading-none ${item.favorito ? 'text-amber-500' : 'text-stone-300'}">${item.favorito ? '★' : '☆'}</button>`}
                                 ${naLista && !modoSelecaoAtivo ? '<span title="Na lista de compras" class="w-2 h-2 rounded-full bg-[#556B2F] shrink-0"></span>' : ''}
                             </div>
                         </div>
@@ -2697,7 +2716,7 @@
                             </div>
                         </div>
                         <div class="min-w-0">
-                            <h3 class="text-xs sm:text-sm font-black text-stone-900 leading-tight truncate">${escaparHtml(item.nome)}</h3>
+                            <h3 class="text-xs sm:text-sm font-black text-stone-900 leading-tight truncate">${item.favorito ? '<span class="text-amber-500">★</span> ' : ''}${escaparHtml(item.nome)}</h3>
                             <p class="text-[11px] font-bold text-[#5A4A82] truncate mt-0.5">${melhor ? escaparHtml(melhor.local) : 'Sem preço'}</p>
                         </div>
                         <div class="pt-1.5 border-t border-[#6B5B95]/10 flex items-baseline justify-between gap-1">
@@ -3169,6 +3188,8 @@
             const item = dadosApp.itens.find(i => i.id === itemIdEmEdicao);
             if (!item) return;
             try { renderizarGraficoHistorico(item); } catch (e) { console.warn('gráfico', e); }
+            const btnFav = document.getElementById('btnFavoritoDetalhe');
+            if (btnFav) { btnFav.innerText = item.favorito ? '★' : '☆'; btnFav.title = item.favorito ? 'Tirar dos favoritos' : 'Favoritar'; }
 
             const catsTexto = obterCategoriasDoItem(item).join(', ');
             const refTexto = formatarMedida(item.quantidade, item.unidade);
@@ -3225,6 +3246,14 @@
                 if (ehPrimeiro) {
                     const bgBadge = dadosApp.modoFacil ? 'bg-[#6B5B95]' : 'bg-[#556B2F]';
                     badgePosicaoHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full ${bgBadge} text-white text-[10px] font-black">1º Lugar 🏆</span>`;
+                    // Quanto o 1º é mais barato que o 2º colocado
+                    const segundo = ranking[1];
+                    if (segundo && segundo.precoRef > 0) {
+                        const econ = ((segundo.precoRef - entry.precoRef) / segundo.precoRef) * 100;
+                        badgePosicaoHtml += econ >= 0.05
+                            ? ` <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black">↓ ${econ.toFixed(1)}% mais barato que o 2º</span>`
+                            : ` <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[10px] font-black">🟰 empatado com o 2º</span>`;
+                    }
                 } else {
                     const anterior = ranking[index - 1];
                     const diffPct = anterior.precoRef > 0 ? ((entry.precoRef - anterior.precoRef) / anterior.precoRef) * 100 : 0;
@@ -3398,6 +3427,24 @@
                             `;
                         }).join('');
 
+                    const outrosRanking = ranking.filter(o => o.chave !== entry.chave && o.precoRef > 0);
+                    const comparacaoRanking = outrosRanking.length ? `
+                        <div class="rounded-xl border border-stone-200 p-2.5 space-y-1.5">
+                            <p class="text-[10px] font-black uppercase text-stone-500">Comparado aos outros do ranking • por ${refTexto}</p>
+                            ${outrosRanking.map(o => {
+                                const pos = ranking.indexOf(o) + 1;
+                                const d = ((entry.precoRef - o.precoRef) / o.precoRef) * 100;
+                                const nomeOutro = `${pos}º ${escaparHtml(o.local)}${contagemPorLoja[o.local] > 1 ? ' (' + formatarMedida(o.quantidade, o.unidade) + ')' : ''}`;
+                                const selo = Math.abs(d) < 0.05
+                                    ? '<span class="px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[10px] font-black shrink-0">🟰 mesmo preço</span>'
+                                    : d < 0
+                                        ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black shrink-0">↓ ${Math.abs(d).toFixed(1)}% mais barato</span>`
+                                        : `<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-black shrink-0">↑ ${d.toFixed(1)}% mais caro</span>`;
+                                return `<div class="flex items-center justify-between gap-2">
+                                    <span class="text-[11px] font-bold text-stone-700 truncate">vs ${nomeOutro} <span class="text-stone-400">${formatarMoeda(o.precoRef)}</span></span>${selo}</div>`;
+                            }).join('')}
+                        </div>` : '';
+
                     blocoHistorico = `
                         <div id="painelHistoricoAberto" onclick="event.stopPropagation()" class="mt-2 bg-white rounded-2xl border border-stone-200 p-3 space-y-2 anim-fade-up">
                             <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-2.5">
@@ -3409,6 +3456,7 @@
                                     Histórico em ${escaparHtml(entry.local)} • Ref: ${refTexto} • cada preço comparado com o anterior
                                 </p>
                             </div>
+                            ${comparacaoRanking}
                             <div class="divide-y divide-stone-100">${linhasHist}</div>
                         </div>
                     `;
@@ -3912,6 +3960,9 @@
                     }
                     return true;
                 });
+
+            const ehFav = prod => { const e = encontrarItemNaHomePorNome(prod.nome); return !!e && !!e.favorito; };
+            filtrados.sort((a, b) => (ehFav(b) ? 1 : 0) - (ehFav(a) ? 1 : 0)); // ordenação estável: só sobe os favoritos
 
             if (contador) {
                 contador.innerText = `${filtrados.length} ${filtrados.length === 1 ? 'item' : 'itens'}`;
@@ -5832,6 +5883,85 @@
                 }
                 history.back(); // segundo toque: sai do app
             });
+        }
+
+
+        // ================= FAVORITOS =================
+        function atualizarBotaoFiltroFavoritos() {
+            const b = document.getElementById('btnFiltroFavoritos');
+            if (!b) return;
+            const ativo = !!dadosApp.filtroFavoritos;
+            b.innerText = ativo ? '★' : '☆';
+            b.className = `h-9 w-9 rounded-xl border text-base font-black flex items-center justify-center shadow-xs ${ativo ? 'bg-amber-400 border-amber-400 text-stone-900' : 'bg-white border-stone-200 text-stone-400'}`;
+            b.title = ativo ? 'Mostrando só favoritos (toque para ver todos)' : 'Mostrar só favoritos';
+        }
+
+        function alternarFiltroFavoritos() {
+            const temFavoritos = dadosApp.itens.some(i => i.favorito && !i.somenteLista);
+            if (!dadosApp.filtroFavoritos && !temFavoritos) {
+                mostrarToast('Você ainda não tem favoritos. Toque na ☆ ao lado do nome de um item para favoritar.');
+                return;
+            }
+            dadosApp.filtroFavoritos = !dadosApp.filtroFavoritos;
+            salvarDadosLocais();
+            atualizarBotaoFiltroFavoritos();
+            renderizarProdutos();
+            mostrarToast(dadosApp.filtroFavoritos ? '⭐ Mostrando só os favoritos' : 'Mostrando todos os itens');
+        }
+
+        function definirFavorito(item, valor) {
+            item.favorito = !!valor;
+            if (!dadosApp.itens.some(i => i.favorito) && dadosApp.filtroFavoritos) {
+                dadosApp.filtroFavoritos = false; // sem favoritos, volta a mostrar tudo
+                atualizarBotaoFiltroFavoritos();
+            }
+        }
+
+        function alternarFavorito(event, id) {
+            if (event) event.stopPropagation();
+            if (Date.now() - ultimoGestoTempo < 350) return;
+            const item = dadosApp.itens.find(i => i.id === id);
+            if (!item) return;
+            definirFavorito(item, !item.favorito);
+            salvarDadosLocais();
+            renderizarProdutos();
+            mostrarToast(item.favorito ? `⭐ "${item.nome}" nos favoritos` : `"${item.nome}" saiu dos favoritos`);
+        }
+
+        function alternarFavoritoDetalhe(event) {
+            if (event) event.stopPropagation();
+            const item = dadosApp.itens.find(i => i.id === itemIdEmEdicao);
+            if (!item) return;
+            definirFavorito(item, !item.favorito);
+            salvarDadosLocais();
+            renderizarDetalhesItem();
+            renderizarProdutos();
+            mostrarToast(item.favorito ? '⭐ Adicionado aos favoritos' : 'Removido dos favoritos');
+        }
+
+        function favoritarSelecionados() {
+            const sel = dadosApp.itens.filter(i => idsSelecionados.has(i.id));
+            if (!sel.length) return;
+            const todosJaFav = sel.every(i => i.favorito);
+            sel.forEach(i => definirFavorito(i, !todosJaFav));
+            salvarDadosLocais();
+            encerrarModoSelecao();
+            renderizarProdutos();
+            mostrarToast(todosJaFav
+                ? `${sel.length} ${sel.length === 1 ? 'item saiu' : 'itens saíram'} dos favoritos`
+                : `⭐ ${sel.length} ${sel.length === 1 ? 'item favoritado' : 'itens favoritados'}`);
+        }
+
+        function porFavoritosNaLista() {
+            const favs = dadosApp.itens.filter(i => i.favorito);
+            if (!favs.length) { mostrarToast('Você ainda não tem favoritos. Favorite itens no Principal tocando na ☆.'); return; }
+            let novos = 0;
+            favs.forEach(i => { if (!itemNaLista(i)) { setItemNaLista(i, true); novos++; } });
+            salvarDadosLocais();
+            atualizarBadgeCompras();
+            renderizarProdutos();
+            renderizarAbaListaCompras();
+            mostrarToast(novos ? `⭐ ${novos} ${novos === 1 ? 'favorito entrou' : 'favoritos entraram'} em "${obterListaAtiva().nome}"` : 'Todos os favoritos já estão nesta lista.');
         }
 
         // ================= CATEGORIAS NO PREÇO RÁPIDO =================
