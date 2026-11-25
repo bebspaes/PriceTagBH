@@ -241,8 +241,22 @@
             </div>
 
             <!-- Dica discreta dos gestos -->
-            <div id="dicaGestosBanner" class="bg-white/80 border border-stone-200/80 rounded-xl px-3 py-1.5 flex items-center justify-between gap-2 text-[10px] font-bold text-stone-500">
-                <span class="leading-snug">⬅️ Deslize: +Preço • ➡️ Deslize: Lista de Compras • 👆 Segure: Selecionar</span>
+            <div id="dicaGestosBanner" class="bg-white/80 border border-stone-200/80 rounded-xl px-2 py-1.5 flex items-center justify-between gap-1.5 text-[10px] font-bold text-stone-600">
+                <div class="flex-1 min-w-0 grid grid-cols-3 gap-1.5">
+                    <span class="flex items-center justify-center gap-1 rounded-lg bg-amber-50 border border-amber-200 px-1.5 py-1 text-amber-800">
+                        <span aria-hidden="true">←</span>
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+                        <span class="truncate">Preço</span>
+                    </span>
+                    <span class="flex items-center justify-center gap-1 rounded-lg bg-[#EEF2E6] border border-[#556B2F]/25 px-1.5 py-1 text-[#3F5122]">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.5L22 8H6"/></svg>
+                        <span class="truncate">Lista</span>
+                        <span aria-hidden="true">→</span>
+                    </span>
+                    <span class="flex items-center justify-center gap-1 rounded-lg bg-stone-100 border border-stone-200 px-1.5 py-1 text-stone-600">
+                        <span aria-hidden="true">👆</span><span class="truncate">Segure: selecionar</span>
+                    </span>
+                </div>
                 <button type="button" onclick="ocultarDicaGestos()" class="text-stone-400 hover:text-stone-700 shrink-0 px-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -575,26 +589,22 @@
     </div>
 
     <!-- ==================== BARRA INFERIOR CONTEXTUAL (SELEÇÃO MÚLTIPLA) ==================== -->
-    <div id="barraInferiorSelecao" class="hidden fixed bottom-0 inset-x-0 z-30 bg-stone-900 text-white border-t border-stone-700 px-3 py-2.5 shadow-[0_-6px_24px_rgba(0,0,0,0.22)] anim-fade-up">
-        <div class="max-w-3xl mx-auto flex items-center justify-between gap-2">
-            <button type="button" onclick="encerrarModoSelecao()" class="h-11 px-3 rounded-2xl bg-white/10 hover:bg-white/20 text-xs font-bold shrink-0">
-                Cancelar
+    <div id="barraInferiorSelecao" class="hidden fixed bottom-0 inset-x-0 z-30 bg-stone-900 text-white border-t border-stone-700 px-2 pt-2 pb-2.5 shadow-[0_-6px_24px_rgba(0,0,0,0.22)] anim-fade-up">
+        <div class="max-w-3xl mx-auto grid grid-cols-5 gap-1.5">
+            <button type="button" onclick="encerrarModoSelecao()" class="flex flex-col items-center justify-center gap-0.5 h-14 rounded-2xl text-[10px] font-black leading-none transition active:scale-95 bg-white/10 text-white">
+                <span class="text-lg leading-none">✕</span><span>Cancelar</span>
             </button>
-
-            <button type="button" onclick="favoritarSelecionados()" title="Favoritar selecionados" class="h-11 w-11 rounded-2xl bg-white/15 hover:bg-white/25 text-amber-300 text-lg font-black flex items-center justify-center shrink-0 transition">★</button>
-
-            <button type="button" onclick="abrirCategorizarMassa()" class="flex-1 h-11 px-2 rounded-2xl bg-amber-400 text-stone-900 text-xs font-black flex items-center justify-center gap-1 transition">
-                <span>🏷️</span><span class="truncate">Categorias</span>
+            <button type="button" onclick="favoritarSelecionados()" class="flex flex-col items-center justify-center gap-0.5 h-14 rounded-2xl text-[10px] font-black leading-none transition active:scale-95 bg-white/10 text-amber-300">
+                <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 2.8l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.24l-5.66 2.97 1.08-6.3L2.85 9.45l6.32-.92L12 2.8z" fill="#F2B630" stroke="#D99A0B" stroke-width="1.4" stroke-linejoin="round"/></svg><span>Favoritar</span>
             </button>
-
-            <button type="button" onclick="compartilharItensSelecionadosModoSelecao()" class="flex-1 h-11 px-2 rounded-2xl bg-white/15 hover:bg-white/25 text-white text-xs font-extrabold flex items-center justify-center gap-1.5 transition">
-                <i class="fa-solid fa-share-nodes"></i>
-                <span class="truncate">Enviar (<span id="qtdCompSelecao">0</span>)</span>
+            <button type="button" onclick="abrirCategorizarMassa()" class="flex flex-col items-center justify-center gap-0.5 h-14 rounded-2xl text-[10px] font-black leading-none transition active:scale-95 bg-amber-400 text-stone-900">
+                <span class="text-lg leading-none">🏷️</span><span>Categorias</span>
             </button>
-
-            <button type="button" onclick="solicitarExclusaoSelecionados()" class="h-11 px-4 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-black flex items-center justify-center gap-1.5 shadow-md shrink-0 transition active:scale-95">
-                <i class="fa-solid fa-trash-can"></i>
-                <span>Apagar (<span id="qtdApagarSelecao">0</span>)</span>
+            <button type="button" onclick="compartilharItensSelecionadosModoSelecao()" class="flex flex-col items-center justify-center gap-0.5 h-14 rounded-2xl text-[10px] font-black leading-none transition active:scale-95 bg-white/10 text-white">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg><span>Enviar (<span id="qtdCompSelecao">0</span>)</span>
+            </button>
+            <button type="button" onclick="solicitarExclusaoSelecionados()" class="flex flex-col items-center justify-center gap-0.5 h-14 rounded-2xl text-[10px] font-black leading-none transition active:scale-95 bg-rose-600 text-white">
+                <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg><span>Apagar (<span id="qtdApagarSelecao">0</span>)</span>
             </button>
         </div>
     </div>
@@ -2596,6 +2606,18 @@
             `;
         }
 
+        // Estrela de favorito (à direita do card). Na seleção, aparece só se já for favorito.
+        function svgEstrela(cheia, tam = 22, contorno = '#CFCAC2') {
+            return `<svg viewBox="0 0 24 24" width="${tam}" height="${tam}" aria-hidden="true"><path d="M12 2.8l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.24l-5.66 2.97 1.08-6.3L2.85 9.45l6.32-.92L12 2.8z" fill="${cheia ? '#F2B630' : 'none'}" stroke="${cheia ? '#D99A0B' : contorno}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+        }
+
+        function renderEstrelaFavorito(item) {
+            const fav = !!item.favorito;
+            const svg = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 2.8l2.83 5.73 6.32.92-4.57 4.46 1.08 6.3L12 17.24l-5.66 2.97 1.08-6.3L2.85 9.45l6.32-.92L12 2.8z" fill="${fav ? '#F2B630' : 'none'}" stroke="${fav ? '#D99A0B' : '#CFCAC2'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+            if (modoSelecaoAtivo) return fav ? `<span class="w-9 h-9 shrink-0 flex items-center justify-center opacity-80">${svg}</span>` : '';
+            return `<button type="button" onclick="alternarFavorito(event, '${item.id}')" title="${fav ? 'Tirar dos favoritos' : 'Favoritar'}" class="w-9 h-9 shrink-0 rounded-full flex items-center justify-center transition active:scale-90 ${fav ? '' : 'opacity-90'}">${svg}</button>`;
+        }
+
         function renderBotaoMaisPreco(item, tamanhoClasse = 'w-9 h-9') {
             const corBtn = dadosApp.modoFacil
                 ? 'bg-[#EBE5F5] hover:bg-[#DDD3F0] border-[#6B5B95]/30 text-[#5A4A82]'
@@ -2650,7 +2672,7 @@
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-1 min-w-0">
                                 <h3 class="text-sm font-black text-stone-900 leading-tight truncate">${escaparHtml(item.nome)}</h3>
-                                ${modoSelecaoAtivo ? (item.favorito ? '<span class="text-amber-500 text-sm shrink-0">★</span>' : '') : `<button type="button" onclick="alternarFavorito(event, '${item.id}')" title="${item.favorito ? 'Tirar dos favoritos' : 'Favoritar'}" class="shrink-0 w-6 h-6 -my-1 flex items-center justify-center text-base leading-none ${item.favorito ? 'text-amber-500' : 'text-stone-300'}">${item.favorito ? '★' : '☆'}</button>`}
+                                
                             </div>
                             ${melhor ? `
                                 <p class="text-xs font-extrabold text-[#556B2F] truncate mt-0.5">
@@ -2664,7 +2686,7 @@
                                 <p class="text-[11px] font-semibold text-stone-400 truncate mt-0.5">${escaparHtml(catTexto)} • Sem preço cadastrado</p>
                             `}
                         </div>
-                        ${modoSelecaoAtivo ? '' : renderBotaoMaisPreco(item, 'w-9 h-9')}
+                        ${renderEstrelaFavorito(item)}
                     </div>
                 </div>
             `;
@@ -2685,12 +2707,12 @@
                         <div class="min-w-0 flex-1">
                             <div class="flex items-center gap-1.5 min-w-0">
                                 <h3 class="text-sm font-black text-stone-900 truncate">${escaparHtml(item.nome)}</h3>
-                                ${modoSelecaoAtivo ? (item.favorito ? '<span class="text-amber-500 text-sm shrink-0">★</span>' : '') : `<button type="button" onclick="alternarFavorito(event, '${item.id}')" title="${item.favorito ? 'Tirar dos favoritos' : 'Favoritar'}" class="shrink-0 w-6 h-6 -my-1 flex items-center justify-center text-base leading-none ${item.favorito ? 'text-amber-500' : 'text-stone-300'}">${item.favorito ? '★' : '☆'}</button>`}
+                                
                                 ${naLista && !modoSelecaoAtivo ? '<span title="Na lista de compras" class="w-2 h-2 rounded-full bg-[#556B2F] shrink-0"></span>' : ''}
                             </div>
                         </div>
                         ${melhor && !modoSelecaoAtivo ? `<span class="text-xs font-black text-[#556B2F] shrink-0">${formatarMoeda(melhor.precoRef)}</span>` : ''}
-                        ${modoSelecaoAtivo ? '' : renderBotaoMaisPreco(item, 'w-8 h-8')}
+                        ${renderEstrelaFavorito(item)}
                     </div>
                 </div>
             `;
@@ -3189,7 +3211,7 @@
             if (!item) return;
             try { renderizarGraficoHistorico(item); } catch (e) { console.warn('gráfico', e); }
             const btnFav = document.getElementById('btnFavoritoDetalhe');
-            if (btnFav) { btnFav.innerText = item.favorito ? '★' : '☆'; btnFav.title = item.favorito ? 'Tirar dos favoritos' : 'Favoritar'; }
+            if (btnFav) { btnFav.innerHTML = svgEstrela(!!item.favorito, 18, '#FDE68A'); btnFav.title = item.favorito ? 'Tirar dos favoritos' : 'Favoritar'; }
 
             const catsTexto = obterCategoriasDoItem(item).join(', ');
             const refTexto = formatarMedida(item.quantidade, item.unidade);
@@ -4896,7 +4918,11 @@
                 const barras = agora.map((e, pos) => {
                     const larg = Math.max(6, (e.precoRef / max) * 100);
                     const pct = min > 0 ? ((e.precoRef - min) / min) * 100 : 0;
-                    const rotulo = pos === 0 ? '🏆 mais barato' : `+${pct.toFixed(0)}%`;
+                    const segundoRef = agora[1] ? agora[1].precoRef : 0;
+                    const econ1 = segundoRef > 0 ? ((segundoRef - e.precoRef) / segundoRef) * 100 : 0;
+                    const rotulo = pos === 0
+                        ? `🏆 <span class="px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700">↓ ${econ1.toFixed(0)}% mais barato</span>`
+                        : `+${pct.toFixed(0)}%`;
                     return `
                         <div class="space-y-0.5">
                             <div class="flex items-baseline justify-between gap-2">
@@ -5891,7 +5917,7 @@
             const b = document.getElementById('btnFiltroFavoritos');
             if (!b) return;
             const ativo = !!dadosApp.filtroFavoritos;
-            b.innerText = ativo ? '★' : '☆';
+            b.innerHTML = svgEstrela(ativo, 19, '#A8A29E');
             b.className = `h-9 w-9 rounded-xl border text-base font-black flex items-center justify-center shadow-xs ${ativo ? 'bg-amber-400 border-amber-400 text-stone-900' : 'bg-white border-stone-200 text-stone-400'}`;
             b.title = ativo ? 'Mostrando só favoritos (toque para ver todos)' : 'Mostrar só favoritos';
         }
