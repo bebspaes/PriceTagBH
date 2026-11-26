@@ -6,7 +6,7 @@
     <title>Price Tag - Comparador de Preços</title>
     <!-- App instalável (PWA) -->
     <link rel="manifest" href="manifest.webmanifest">
-    <meta name="theme-color" content="#556B2F">
+    <meta name="theme-color" content="#141A12">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -20,12 +20,12 @@
     <!-- Tesseract.js para Leitura Real de Nota Fiscal (OCR no navegador) -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800;9..40,900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F7F5F0;
-            color: #1C1917;
+            font-family: 'DM Sans', 'Inter', sans-serif;
+            background-color: var(--fundo);
+            color: var(--tinta);
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
             user-select: none;
@@ -45,6 +45,65 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+
+        /* ================= TEMA PRETO + VERDE-LIMÃO (claro) E MODO NOTURNO ================= */
+        :root {
+            --fundo: #F4F6F3; --tinta: #0B0F0A; --sup: #141A12; --sup2: #232B20;
+            --lima: #84CC16; --lima-claro: #A3E635; --lima-texto: #3F6212; --lima-suave: #ECFCCB; --lima-borda: #BEF264;
+            --acento: #4D7C0F;
+        }
+        html.tema-escuro {
+            --fundo: #121512; --tinta: #ECEDE8; --sup: #1A2117; --sup2: #26301F;
+            --lima: #8DB255; --lima-claro: #A3E635; --lima-texto: #C7E19A; --lima-suave: #26301F; --lima-borda: #3A4630;
+            --acento: #B5D67A;
+            color-scheme: dark;
+        }
+        body:not(.modo-facil) [class~="bg-[#F7F5F0]"] { background-color: var(--fundo) !important; }
+        /* superfícies escuras: cabeçalho e topo das janelas */
+        body:not(.modo-facil) header[class~="bg-[#556B2F]"],
+        body:not(.modo-facil) .sup-escura { background-color: var(--sup) !important; }
+        body:not(.modo-facil) .sup-escura .text-amber-200, body:not(.modo-facil) header .text-amber-200 { color: var(--lima-claro) !important; }
+        /* botões e destaques: verde-limão com texto escuro */
+        body:not(.modo-facil) [class~="bg-[#556B2F]"]:not(header):not(.sup-escura) { background-color: var(--lima) !important; color: #0B0F0A !important; }
+        body:not(.modo-facil) [class~="bg-[#556B2F]"]:not(header):not(.sup-escura) * { color: inherit !important; }
+        body:not(.modo-facil) [class~="text-[#556B2F]"] { color: var(--acento) !important; }
+        body:not(.modo-facil) [class~="text-[#3F5122]"] { color: var(--lima-texto) !important; }
+        body:not(.modo-facil) [class~="border-[#556B2F]"] { border-color: var(--lima) !important; }
+        body:not(.modo-facil) [class*="border-[#556B2F]/"] { border-color: var(--lima-borda) !important; }
+        body:not(.modo-facil) [class~="border-l-[#556B2F]"] { border-left-color: var(--lima) !important; }
+        body:not(.modo-facil) [class~="bg-[#EEF2E6]"], body:not(.modo-facil) [class~="bg-[#F4F7EE]"],
+        body:not(.modo-facil) [class~="bg-[#EAF0DF]"], body:not(.modo-facil) [class~="bg-[#E1EAD0]"] { background-color: var(--lima-suave) !important; }
+        body:not(.modo-facil) [class~="accent-[#556B2F]"] { accent-color: var(--lima) !important; }
+        body:not(.modo-facil) .aba-nav-btn.aba-ativa { background-color: var(--lima-claro); color: #0B0F0A; }
+        .verde-ok { background: #DCFCE7; color: #15803D; }
+        .vermelho-alta { background: #FFE4E6; color: #E11D48; }
+
+        /* ----- Modo noturno: neutros ----- */
+        html.tema-escuro body { background-color: var(--fundo); }
+        html.tema-escuro .bg-white, html.tema-escuro [class~="bg-white/80"], html.tema-escuro [class~="bg-white/90"] { background-color: #1C201B !important; }
+        html.tema-escuro .bg-stone-50, html.tema-escuro [class~="bg-stone-50/80"] { background-color: #171A16 !important; }
+        html.tema-escuro .bg-stone-100, html.tema-escuro .bg-stone-200 { background-color: #2A3028 !important; }
+        html.tema-escuro [class~="bg-stone-200/70"] { background-color: #171A16 !important; }
+        html.tema-escuro [class~="bg-white/95"], html.tema-escuro [class~="bg-white/90"] { background-color: rgba(28,32,27,.96) !important; }
+        html.tema-escuro .text-stone-900, html.tema-escuro .text-stone-800 { color: #ECEDE8 !important; }
+        html.tema-escuro .text-stone-700, html.tema-escuro .text-stone-600 { color: #C9CEC6 !important; }
+        html.tema-escuro .text-stone-500, html.tema-escuro .text-stone-400 { color: #9CA29A !important; }
+        html.tema-escuro .text-stone-300 { color: #6B7168 !important; }
+        html.tema-escuro .border-stone-100, html.tema-escuro .border-stone-200, html.tema-escuro .border-stone-300,
+        html.tema-escuro [class*="border-stone-200/"], html.tema-escuro .divide-stone-100 > * { border-color: #2C322A !important; }
+        html.tema-escuro .bg-amber-50 { background-color: #2E2612 !important; }
+        html.tema-escuro .border-amber-200, html.tema-escuro .border-amber-300 { border-color: #5C4A1A !important; }
+        html.tema-escuro .text-amber-900, html.tema-escuro .text-amber-800, html.tema-escuro .text-amber-700 { color: #FCD34D !important; }
+        html.tema-escuro .bg-emerald-50, html.tema-escuro .bg-emerald-100, html.tema-escuro .verde-ok { background-color: #173B2A !important; }
+        html.tema-escuro .text-emerald-700, html.tema-escuro .text-emerald-800, html.tema-escuro .verde-ok { color: #6EE7A8 !important; }
+        html.tema-escuro .bg-rose-50, html.tema-escuro .bg-rose-100, html.tema-escuro .vermelho-alta { background-color: #3B1A20 !important; }
+        html.tema-escuro .text-rose-600, html.tema-escuro .text-rose-500, html.tema-escuro .vermelho-alta { color: #FB8FA3 !important; }
+        html.tema-escuro .border-rose-200 { border-color: #5A2630 !important; }
+        html.tema-escuro input, html.tema-escuro select, html.tema-escuro textarea { color: #ECEDE8; }
+        html.tema-escuro input::placeholder, html.tema-escuro textarea::placeholder { color: #6B7168; }
+        html.tema-escuro svg text[fill="#78716c"] { fill: #9CA29A; }
+        html.tema-escuro svg line[stroke="#e7e5e4"] { stroke: #2C322A; }
 
         /* Tema Modo Fácil (Roxo Sutil) */
         body.modo-facil {
@@ -141,6 +200,7 @@
                     </button>
 
                     <!-- Utilidades compactas (ocultas no Modo Fácil) -->
+                    <button type="button" id="btnTema" onclick="alternarTema()" title="Tema claro/escuro" class="w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-sm transition active:scale-95">🌙</button>
                     <button type="button" onclick="abrirListaLojas()" title="Minhas lojas" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-sm transition active:scale-95">🏪</button>
                     <button type="button" onclick="abrirModalGrupo()" title="Grupo Familiar" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-xs transition active:scale-95">
                         <i class="fa-solid fa-users"></i>
@@ -308,7 +368,19 @@
                             <i class="fa-solid fa-wand-sparkles cor-primaria-texto text-[#556B2F]"></i>
                             <span>Catálogo Pronto</span>
                         </h2>
-                        <p class="text-[11px] font-semibold text-stone-500 mt-0.5">Toque em <strong>+</strong> para levar ao Principal. Deslize ➡️ para a <strong>Lista de Compras</strong> ou ⬅️ para cadastrar o <strong>Preço</strong></p>
+                        <p class="text-[11px] font-semibold text-stone-500 mt-0.5">Toque no item para levar ao Principal.</p>
+                        <div class="grid grid-cols-2 gap-1.5 mt-1.5 text-[10px] font-bold">
+                            <span class="flex items-center justify-center gap-1 rounded-lg bg-amber-50 border border-amber-200 px-1.5 py-1 text-amber-800">
+                                <span aria-hidden="true">←</span>
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0L3 13V3h10l7.6 7.6a2 2 0 010 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>
+                                <span>Preço</span>
+                            </span>
+                            <span class="flex items-center justify-center gap-1 rounded-lg bg-[#EEF2E6] border border-[#556B2F]/25 px-1.5 py-1 text-[#3F5122]">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2 3h3l2.6 12.4a2 2 0 002 1.6h8.8a2 2 0 002-1.5L22 8H6"/></svg>
+                                <span>Lista</span>
+                                <span aria-hidden="true">→</span>
+                            </span>
+                        </div>
                     </div>
                     <span id="contadorCatalogoPronto" class="px-2.5 py-1 rounded-xl bg-stone-100 text-stone-600 text-[10px] font-black shrink-0">0 itens</span>
                 </div>
@@ -335,7 +407,7 @@
 
                 <div>
                     <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Nome do Item</label>
-                    <input type="text" id="cadNome" placeholder="Ex: Azeite, Tomate, Gasolina, Parmesão, Pizza..." class="w-full h-11 bg-stone-50 border border-stone-200 rounded-xl px-3.5 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <input type="text" id="cadNome" placeholder="" class="w-full h-11 bg-stone-50 border border-stone-200 rounded-xl px-3.5 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                 </div>
 
                 <!-- Preço Inicial Opcional (agiliza o cadastro em uma tela só) -->
@@ -516,7 +588,7 @@
                 <!-- Estabelecimento Detectado / Editável -->
                 <div>
                     <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">2. Estabelecimento / Mercado</label>
-                    <input type="text" id="notaLocal" autocomplete="off" placeholder="Ex: Supermercados BH, Verdemar..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <input type="text" id="notaLocal" autocomplete="off" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                 </div>
 
                 <!-- Texto Colado (Opcional / Alternativa à Foto) -->
@@ -613,9 +685,9 @@
     
 
     <!-- ==================== MODAL: CADASTRO RÁPIDO DE PREÇO (BOTÃO + OU SWIPE RIGHT) ==================== -->
-    <div id="modalPrecoRapido" class="hidden fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="fecharModalPrecoRapido()">
+    <div id="modalPrecoRapido" class="hidden fixed inset-0 z-50 bg-black/55 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="fecharModalPrecoRapido()">
         <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden anim-fade-up" onclick="event.stopPropagation()">
-            <div class="cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between gap-2">
+            <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between gap-2">
                 <div class="flex items-center gap-2 min-w-0">
                     <span id="rapidoIcone" class="text-2xl shrink-0">🏷️</span>
                     <div class="min-w-0">
@@ -649,7 +721,7 @@
 
                 <div>
                     <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Estabelecimento / Loja</label>
-                    <input type="text" id="rapidoInputLocal" autocomplete="off" placeholder="Ex: Supermercados BH, Mercado Central..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <input type="text" id="rapidoInputLocal" autocomplete="off" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                 </div>
 
                 <div>
@@ -677,7 +749,7 @@
 
                 <div class="ocultar-modo-facil">
                     <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Marca / Anotação (opcional)</label>
-                    <input type="text" id="rapidoInputMarca" placeholder="Ex: Gallo, Boa, Muito boa..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-semibold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <input type="text" id="rapidoInputMarca" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-semibold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                 </div>
 
                 <div class="flex items-center justify-between gap-2 pt-1">
@@ -698,7 +770,7 @@
     <div id="modalDetalhesItem" class="hidden fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] flex items-end sm:items-center justify-center p-0 sm:p-4" onclick="fecharModalDetalhes()">
         <div class="bg-[#F7F5F0] w-full max-w-xl max-h-[93vh] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden anim-fade-up" onclick="event.stopPropagation()">
             <!-- Cabeçalho do Modal -->
-            <div class="cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between gap-2 shrink-0">
+            <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between gap-2 shrink-0">
                 <div class="flex items-center gap-2.5 min-w-0 flex-1">
                     <span id="detalheIcone" class="text-2xl shrink-0">🌾</span>
                     <div class="min-w-0 flex-1">
@@ -716,7 +788,8 @@
                             <button type="button" onclick="salvarEdicaoNomeItem()" class="h-8 px-2.5 rounded-lg bg-amber-400 text-stone-900 text-xs font-black shrink-0">Salvar</button>
                             <button type="button" onclick="cancelarEdicaoNomeItem()" class="h-8 px-2 rounded-lg bg-white/20 text-white text-xs font-bold shrink-0">✕</button>
                         </div>
-                        <p id="detalheSubtitulo" onclick="alternarPainelRefCat(event)" class="text-[11px] font-bold text-amber-200 truncate cursor-pointer mt-0.5">Categoria • Ref: 100g</p>
+                        <p id="detalheSubtitulo" class="hidden"></p>
+                        <div id="detalheChips" class="flex flex-wrap gap-1.5 mt-2"></div>
                     </div>
                 </div>
                 <button type="button" onclick="fecharModalDetalhes()" class="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white shrink-0 transition">
@@ -726,28 +799,8 @@
 
             <!-- Corpo com Rolagem: PRIMEIRO A LISTAGEM DE PREÇOS, DEPOIS O CADASTRO ABAIXO -->
             <div id="corpoModalDetalhes" class="overflow-y-auto p-4 space-y-3.5 flex-1">
-                <!-- Botão Incluir na Lista de Compras -->
-                <button type="button" id="btnToggleCompraDetalhe" onclick="toggleCompraItemAtual()" class="w-full py-2.5 px-4 rounded-2xl border-2 border-stone-200 bg-white text-stone-700 font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99]">
-                    <i class="fa-solid fa-basket-shopping"></i>
-                    <span>INCLUIR NA LISTA DE COMPRAS</span>
-                </button>
-
-                <!-- Banner com Nome do Produto acima do Ranking -->
-                <div class="cor-primaria-suave bg-[#EEF2E6] border border-[#556B2F]/20 rounded-2xl p-3 flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2.5 min-w-0">
-                        <span id="bannerDetalheIcone" class="text-2xl shrink-0">🌾</span>
-                        <div class="min-w-0">
-                            <p id="bannerDetalheNome" class="text-sm font-black text-stone-900 leading-tight break-words">Nome do Produto</p>
-                            <p id="bannerDetalheMeta" class="text-[11px] font-bold cor-primaria-texto text-[#556B2F] leading-tight mt-0.5">Categoria • Medida de Referência: 100g</p>
-                        </div>
-                    </div>
-                    <button type="button" id="btnAbrirRefCat" onclick="alternarPainelRefCat(event)" class="ocultar-modo-facil shrink-0 px-2.5 py-1.5 rounded-xl bg-white border border-stone-200 text-[11px] font-extrabold text-stone-700 hover:border-[#556B2F] transition">
-                        ✎ Ref / Cat
-                    </button>
-                </div>
-
-                <!-- Gráfico do histórico de preço -->
-                <div id="graficoHistoricoItem"></div>
+                <!-- Melhor preço em destaque -->
+                <div id="heroDetalhe"></div>
 
                 <!-- Painel Oculto: Editar Referência e Categorias -->
                 <div id="painelEditarRefCat" class="hidden ocultar-modo-facil bg-white rounded-2xl border-2 border-[#556B2F]/35 p-3.5 space-y-3 shadow-sm anim-fade-up">
@@ -791,16 +844,13 @@
                     </div>
                 </div>
 
-                <!-- 1º BLOCO PRINCIPAL: LISTAGEM DE PREÇOS POR ESTABELECIMENTO -->
-                <div class="flex items-center justify-between gap-2 px-1">
-                    <h4 class="text-xs font-black uppercase tracking-wide text-stone-700">Preços por Estabelecimento</h4>
-                    <span class="ocultar-modo-facil text-[10px] font-bold uppercase text-stone-400 text-right">Toque p/ histórico vs 1º</span>
-                </div>
+                <!-- Abas: Lojas | Gráficos -->
+                <div id="abasDetalhe"></div>
+                <div id="graficoHistoricoItem"></div>
+                <div id="listaPrecosDetalhe"></div>
 
-                <div id="listaPrecosDetalhe" class="space-y-2.5"></div>
-
-                <!-- 2º BLOCO (AO DESCER A PÁGINA): CADASTRAR OU ATUALIZAR PREÇO EM LOJA -->
-                <div class="bg-white rounded-3xl border border-stone-200/90 p-4 space-y-3 shadow-xs mt-4">
+                <!-- Formulário antigo (substituído pelo botão + Novo preço), mantido oculto -->
+                <div class="hidden bg-white rounded-3xl border border-stone-200/90 p-4 space-y-3 shadow-xs mt-4">
                     <h3 class="text-xs font-black text-stone-700 flex items-center gap-1.5">
                         <i class="fa-solid fa-tag cor-primaria-texto text-[#556B2F]"></i>
                         <span>Cadastrar ou Atualizar Preço em Loja</span>
@@ -808,7 +858,7 @@
 
                     <div>
                         <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Estabelecimento / Loja</label>
-                        <input type="text" id="inputNovoLocal" autocomplete="off" placeholder="Ex: Supermercados BH, Mercado Central..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                        <input type="text" id="inputNovoLocal" autocomplete="off" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                     </div>
 
                     <div>
@@ -836,7 +886,7 @@
 
                     <div class="ocultar-modo-facil">
                         <label class="block text-[10px] font-black uppercase text-stone-500 mb-1">Marca, detalhe, anotação (opcional)</label>
-                        <input type="text" id="inputNovaMarca" placeholder="Ex: Gallo, Tipo 1, Muito boa..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-semibold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                        <input type="text" id="inputNovaMarca" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-semibold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                     </div>
 
                     <div class="flex items-center justify-between gap-2 pt-1">
@@ -851,7 +901,7 @@
                 </div>
 
                 <!-- Excluir item: no fim da página, sem rodapé fixo -->
-                <div class="pt-4 pb-6 flex justify-center">
+                <div class="pt-2 pb-6 flex justify-center">
                     <button type="button" onclick="excluirItemAtual()" class="text-rose-600 hover:bg-rose-50 border border-rose-200 px-4 py-2.5 rounded-xl text-xs font-black flex items-center gap-1.5 transition">
                         <i class="fa-solid fa-trash-can"></i>
                         <span>Excluir item</span>
@@ -864,7 +914,7 @@
     <!-- ==================== MODAL: GRUPO FAMILIAR ==================== -->
     <div id="modalGrupo" class="hidden fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] flex items-center justify-center p-4" onclick="fecharModalGrupo()">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden anim-fade-up" onclick="event.stopPropagation()">
-            <div class="cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
+            <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
                 <h2 class="text-base font-black flex items-center gap-2"><i class="fa-solid fa-users text-amber-300"></i> Grupo Familiar</h2>
                 <button type="button" onclick="fecharModalGrupo()" class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -888,7 +938,7 @@
     <!-- ==================== MODAL: BACKUP & EXPORTAÇÃO ==================== -->
     <div id="modalBackup" class="hidden fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] flex items-center justify-center p-4" onclick="fecharModalBackup()">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden anim-fade-up" onclick="event.stopPropagation()">
-            <div class="cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
+            <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
                 <h2 class="text-base font-black flex items-center gap-2"><i class="fa-solid fa-download text-amber-300"></i> Backup e Planilha</h2>
                 <button type="button" onclick="fecharModalBackup()" class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -922,7 +972,7 @@
     <!-- ==================== MODAL: INSTALAR NO CELULAR ==================== -->
     <div id="modalInstalar" class="hidden fixed inset-0 z-40 bg-black/55 backdrop-blur-[2px] flex items-center justify-center p-4" onclick="fecharModalInstalar()">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden anim-fade-up" onclick="event.stopPropagation()">
-            <div class="cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
+            <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white px-4 py-3.5 flex items-center justify-between">
                 <h2 class="text-base font-black flex items-center gap-2"><i class="fa-solid fa-mobile-screen text-amber-300"></i> Instalar Price Tag</h2>
                 <button type="button" onclick="fecharModalInstalar()" class="w-8 h-8 rounded-full bg-white/15 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -942,7 +992,7 @@
     <!-- Finalizar compra -->
     <div id="modalFinalizarCompra" class="hidden fixed inset-0 z-50 bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharFinalizarCompra()">
         <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between">
+            <div class="sup-escura bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between">
                 <div><p class="text-[10px] font-black uppercase text-amber-200">Finalizar compra</p><p class="text-sm font-black">Confirme loja e preço pago</p></div>
                 <button type="button" onclick="fecharFinalizarCompra()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg">✕</button>
             </div>
@@ -963,7 +1013,7 @@
     <!-- Minhas lojas -->
     <div id="modalListaLojas" class="hidden fixed inset-0 z-50 bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharListaLojas()">
         <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between">
+            <div class="sup-escura bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between">
                 <div><p class="text-[10px] font-black uppercase text-amber-200">Estabelecimentos</p><p class="text-sm font-black">🏪 Minhas lojas</p></div>
                 <button type="button" onclick="fecharListaLojas()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg">✕</button>
             </div>
@@ -981,7 +1031,7 @@
     <!-- Perfil da loja -->
     <div id="modalPerfilLoja" class="hidden fixed inset-0 z-[55] bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharPerfilLoja()">
         <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[92vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
+            <div class="sup-escura bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
                 <div class="min-w-0"><p class="text-[10px] font-black uppercase text-amber-200">Perfil da loja</p><p id="tituloPerfilLoja" class="text-sm font-black truncate">Loja</p></div>
                 <button type="button" onclick="fecharPerfilLoja()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg shrink-0">✕</button>
             </div>
@@ -998,7 +1048,7 @@
                 </div>
                 <div><span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Endereço</span><input type="text" id="lojaEndereco" autocomplete="off" oninput="atualizarAtalhosLoja()" placeholder="Rua, número" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]"></div>
                 <div><span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Instagram</span><input type="text" id="lojaInstagram" autocomplete="off" oninput="atualizarAtalhosLoja()" placeholder="@loja" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]"></div>
-                <div><span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Observações</span><input type="text" id="lojaObs" autocomplete="off" placeholder="Ex: promoção de hortifrúti às quartas" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]"></div>
+                <div><span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Observações</span><input type="text" id="lojaObs" autocomplete="off" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]"></div>
                 <div id="atalhosPerfilLoja" class="flex gap-2"></div>
             </div>
             <div class="p-4 pt-0">
@@ -1017,7 +1067,7 @@
             <div class="p-4 space-y-3 overflow-y-auto">
                 <div>
                     <span class="block text-[10px] font-black uppercase text-stone-500 mb-1">Produto</span>
-                    <input type="text" id="calcSalvarNome" autocomplete="off" oninput="renderizarSugestoesProdutoCalc()" placeholder="Ex: Whey Protein, Arroz 5kg..." class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                    <input type="text" id="calcSalvarNome" autocomplete="off" oninput="renderizarSugestoesProdutoCalc()" placeholder="" class="w-full h-10 bg-stone-50 border border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                     <div id="calcSalvarSugestoes" onclick="escolherSugestaoProdutoCalc(event)" class="flex flex-wrap gap-1.5 mt-1.5"></div>
                     <p class="text-[10px] font-semibold text-stone-400 mt-1">Se o produto já existe, o preço entra no ranking dele. Se não, ele é cadastrado.</p>
                 </div>
@@ -1039,7 +1089,7 @@
     <!-- Categorizar em massa -->
     <div id="modalCategorizarMassa" class="hidden fixed inset-0 z-50 bg-black/55 flex items-end sm:items-center justify-center" onclick="fecharCategorizarMassa()">
         <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
-            <div class="bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
+            <div class="sup-escura bg-[#556B2F] text-white rounded-t-3xl px-4 py-3 flex items-center justify-between gap-2">
                 <div class="min-w-0"><p class="text-[10px] font-black uppercase text-amber-200">🏷️ Categorizar em massa</p><p id="tituloCategorizarMassa" class="text-sm font-black truncate"></p></div>
                 <button type="button" onclick="fecharCategorizarMassa()" class="w-9 h-9 rounded-full bg-white/20 text-white font-black text-lg shrink-0">✕</button>
             </div>
@@ -1247,7 +1297,7 @@
 
         const CATEGORIAS_DISPONIVEIS = [
             'Supermercado', 'Feira', 'Hortifrúti', 'Açougue', 'A granel',
-            'Limpeza', 'Produtos', 'Embalados', 'Bebidas e Vinhos',
+            'Limpeza', 'Produtos', 'Bebidas e Vinhos',
             'Restaurante', 'Remédios', 'Posto de Gasolina', 'Avião',
             'Serviços', 'Outros'
         ];
@@ -1269,12 +1319,12 @@
         const CAT_CARNES = ['Supermercado', 'Açougue', 'Hortifrúti'];
         const CAT_ERVAS = ['Supermercado', 'Hortifrúti'];
         const CAT_TEMPEROS = ['Supermercado', 'Hortifrúti', 'A granel'];
-        const CAT_BASICOS = ['Supermercado', 'Embalados'];
+        const CAT_BASICOS = ['Supermercado'];
         const CAT_LIMPEZA = ['Supermercado', 'Limpeza'];
 
         const CATALOGO_PREDEFINIDO = [
             // ---- ALIMENTAÇÃO BÁSICA ----
-            { grupo: 'basicos', nome: 'Pão Francês', icone: '🍞', qtd: 1, unidade: 'kg', categorias: ['Supermercado', 'Embalados'] },
+            { grupo: 'basicos', nome: 'Pão Francês', icone: '🍞', qtd: 1, unidade: 'kg', categorias: ['Supermercado'] },
             { grupo: 'basicos', nome: 'Pão de Forma', icone: '🍞', qtd: 500, unidade: 'g', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Arroz Branco', icone: '🍚', qtd: 5, unidade: 'kg', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Arroz Integral', icone: '🍚', qtd: 1, unidade: 'kg', categorias: CAT_BASICOS },
@@ -1301,7 +1351,7 @@
             { grupo: 'basicos', nome: 'Requeijão Cremoso', icone: '🧀', qtd: 200, unidade: 'g', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Queijo Mussarela', icone: '🧀', qtd: 100, unidade: 'g', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Queijo Minas Frescal', icone: '🧀', qtd: 500, unidade: 'g', categorias: ['Supermercado', 'Feira'] },
-            { grupo: 'basicos', nome: 'Queijo Parmesão', icone: '🧀', qtd: 100, unidade: 'g', categorias: ['Supermercado', 'Embalados', 'A granel'] },
+            { grupo: 'basicos', nome: 'Queijo Parmesão', icone: '🧀', qtd: 100, unidade: 'g', categorias: ['Supermercado', 'A granel'] },
             { grupo: 'basicos', nome: 'Presunto', icone: '🥓', qtd: 100, unidade: 'g', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Iogurte Natural', icone: '🥛', qtd: 170, unidade: 'g', categorias: CAT_BASICOS },
             { grupo: 'basicos', nome: 'Goma de Tapioca', icone: '🫓', qtd: 500, unidade: 'g', categorias: CAT_BASICOS },
@@ -1594,7 +1644,7 @@
                     { local: 'Supermercados BH', preco: 2.99, marca: 'Kitano' },
                     { local: 'Drogaria Araujo', preco: 3.90, marca: 'Puro' }
                 ]),
-                criarItemPadrao('9', 'Café em Pó', ['Supermercado', 'Embalados'], 'g', 500, '☕', [
+                criarItemPadrao('9', 'Café em Pó', ['Supermercado'], 'g', 500, '☕', [
                     { local: 'Atacadão', preco: 18.90, promocao: true, marca: 'Três Corações' },
                     { local: 'Supermercados BH', preco: 20.50, marca: 'Pilão Tradicional' },
                     { local: 'Supernosso', preco: 24.90, marca: 'Melitta Extra Forte' }
@@ -1619,7 +1669,7 @@
                     { local: 'Supermercados BH', preco: 9.89, marca: 'Zero Açúcar' },
                     { local: 'Supernosso', preco: 10.99, marca: 'Original' }
                 ]),
-                criarItemPadrao('14', 'Leite Integral 1L', ['Supermercado', 'Embalados'], 'L', 1, '🥛', [
+                criarItemPadrao('14', 'Leite Integral 1L', ['Supermercado'], 'L', 1, '🥛', [
                     { local: 'Supermercados BH', preco: 4.69, marca: 'Itambé' },
                     { local: 'Atacadão', preco: 4.89, marca: 'Piracanjuba' },
                     { local: 'Verdemar', preco: 5.49, marca: 'Porto Alegre' }
@@ -1634,22 +1684,22 @@
                     { local: 'Armazém Natural', preco: 7.50, marca: 'Canela do Ceilão' },
                     { local: 'Supermercados BH', preco: 5.49, quantidade: 40, unidade: 'g', marca: 'Pote 40g' }
                 ]),
-                criarItemPadrao('17', 'Mussarela', ['Supermercado', 'Embalados'], 'g', 100, '🧀', [
+                criarItemPadrao('17', 'Mussarela', ['Supermercado'], 'g', 100, '🧀', [
                     { local: 'Atacadão', preco: 3.69, marca: 'Peça fatiada' },
                     { local: 'Supermercados BH', preco: 4.19, marca: 'Itambé' },
                     { local: 'Verdemar', preco: 4.99, marca: 'Fatiada na hora' }
                 ]),
-                criarItemPadrao('18', 'Arroz Branco 5kg', ['Supermercado', 'Embalados'], 'kg', 1, '🍚', [
+                criarItemPadrao('18', 'Arroz Branco 5kg', ['Supermercado'], 'kg', 1, '🍚', [
                     { local: 'Supermercados BH', preco: 28.90, quantidade: 5, unidade: 'kg', marca: 'Prato Fino 5kg' },
                     { local: 'Supernosso', preco: 31.50, quantidade: 5, unidade: 'kg', marca: 'Camil 5kg' },
                     { local: 'Atacadão', preco: 16.00, quantidade: 2, unidade: 'kg', promocao: true, marca: 'Prato Fino 2kg' }
                 ]),
-                criarItemPadrao('19', 'Feijão Carioca 1kg', ['Supermercado', 'Embalados'], 'kg', 1, '🫘', [
+                criarItemPadrao('19', 'Feijão Carioca 1kg', ['Supermercado'], 'kg', 1, '🫘', [
                     { local: 'Atacadão', preco: 6.49, marca: 'Kicaldo Tipo 1' },
                     { local: 'Supermercados BH', preco: 7.29, marca: 'Camil Tipo 1' },
                     { local: 'Supernosso', preco: 8.49, marca: 'Galante' }
                 ]),
-                criarItemPadrao('20', 'Parmesão', ['Embalados', 'A granel'], 'g', 100, '🧀', [
+                criarItemPadrao('20', 'Parmesão', ['Supermercado', 'A granel'], 'g', 100, '🧀', [
                     { local: 'Mercado Central', preco: 26.70, quantidade: 300, unidade: 'g', marca: 'Cunha 300g Artesanal' },
                     { local: 'Supermercados BH', preco: 19.90, quantidade: 180, unidade: 'g', marca: 'Faixa Azul 180g' },
                     { local: 'Verdemar', preco: 24.90, quantidade: 200, unidade: 'g', marca: 'Tirolez 200g' }
@@ -1968,6 +2018,7 @@
 
             normalizarDadosSalvos();
             migrarCategoriasProdutosV1();
+            migrarRemoverEmbalados();
             salvarDadosLocais();
         }
 
@@ -1976,11 +2027,27 @@
             'aveia em flocos finos': ['Supermercado', 'Hortifrúti', 'A granel'],
             'azeite extra virgem 500ml': ['Supermercado', 'Hortifrúti', 'A granel'],
             'suplemento whey protein': ['Supermercado', 'A granel'],
-            'leite integral 1l': ['Supermercado', 'Embalados'],
-            'mussarela': ['Supermercado', 'Embalados'],
-            'arroz branco 5kg': ['Supermercado', 'Embalados'],
-            'feijao carioca 1kg': ['Supermercado', 'Embalados']
+            'leite integral 1l': ['Supermercado'],
+            'mussarela': ['Supermercado'],
+            'arroz branco 5kg': ['Supermercado'],
+            'feijao carioca 1kg': ['Supermercado']
         };
+
+        // "Embalados" saiu do app: tira a categoria de todos os itens (quem ficar sem nenhuma vai para Supermercado)
+        function migrarRemoverEmbalados() {
+            const tirar = c => normalizarTextoBusca(c) !== 'embalados';
+            (dadosApp.itens || []).forEach(item => {
+                const atuais = obterCategoriasDoItem(item);
+                if (atuais.every(tirar)) return;
+                const novas = atuais.filter(tirar);
+                item.categorias = novas.length ? novas : ['Supermercado'];
+                item.categoria = item.categorias[0];
+            });
+            dadosApp.categoriasPersonalizadas = (dadosApp.categoriasPersonalizadas || []).filter(tirar);
+            if (typeof filtrosCategoriasSelecionadas !== 'undefined') {
+                filtrosCategoriasSelecionadas = filtrosCategoriasSelecionadas.filter(tirar);
+            }
+        }
 
         function migrarCategoriasProdutosV1() {
             if (dadosApp.migCategoriasProdutosV1) return;
@@ -2067,7 +2134,7 @@
                         ${dadosApp.listasCompras.length > 1 ? `<button type="button" onclick="excluirListaAtiva()" class="text-rose-500 underline">Excluir esta lista</button>` : ''}
                     </div>
                     <div id="formListaCompras" class="hidden flex items-center gap-2">
-                        <input type="text" id="inputNomeLista" maxlength="30" autocomplete="off" placeholder="Ex: A granel, Supermercado..." class="flex-1 min-w-0 h-10 bg-white border-2 border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
+                        <input type="text" id="inputNomeLista" maxlength="30" autocomplete="off" placeholder="" class="flex-1 min-w-0 h-10 bg-white border-2 border-stone-200 rounded-xl px-3 text-sm font-bold text-stone-800 focus:outline-none focus:border-[#556B2F]">
                         <button type="button" onclick="salvarFormLista()" class="h-10 px-4 rounded-xl bg-[#556B2F] text-white text-xs font-black">Salvar</button>
                         <button type="button" onclick="fecharFormLista()" class="h-10 w-10 rounded-xl bg-stone-100 text-stone-500 font-black">✕</button>
                     </div>`;
@@ -2273,8 +2340,10 @@
                 }
 
                 document.addEventListener('click', () => fecharTodosDropdownsFiltro());
+                instalarFechamentoDropdownsSemClique();
                 instalarBotaoVoltar();
                 atualizarBotaoFiltroFavoritos();
+                aplicarTema();
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         fecharTodosDropdownsFiltro();
@@ -2431,6 +2500,33 @@
         function fecharTodosDropdownsFiltro() {
             document.getElementById('dropdownFiltroCategoria')?.classList.add('hidden');
             document.getElementById('dropdownFiltroLoja1')?.classList.add('hidden');
+        }
+
+        // Toque fora de um filtro aberto: só fecha o filtro, sem abrir o item que estava embaixo
+        let engolirProximoClique = false;
+        function algumDropdownFiltroAberto() {
+            return ['dropdownFiltroCategoria', 'dropdownFiltroLoja1'].some(id => {
+                const el = document.getElementById(id);
+                return el && !el.classList.contains('hidden');
+            });
+        }
+        function instalarFechamentoDropdownsSemClique() {
+            const aoTocar = (e) => {
+                if (!algumDropdownFiltroAberto()) return;
+                const box = document.getElementById('filtrosSecundariosBox');
+                if (box && box.contains(e.target)) return; // tocou nos próprios filtros
+                fecharTodosDropdownsFiltro();
+                engolirProximoClique = true;
+                ultimoGestoTempo = Date.now(); // impede swipe/abrir item com este toque
+                setTimeout(() => { engolirProximoClique = false; }, 700);
+            };
+            document.addEventListener('pointerdown', aoTocar, true);
+            document.addEventListener('click', (e) => {
+                if (!engolirProximoClique) return;
+                engolirProximoClique = false;
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
         }
 
         function atualizarDropdownsFiltro() {
@@ -3154,6 +3250,7 @@
             if (!item) return;
 
             itemIdEmEdicao = id;
+            abaDetalhe = 'lojas';
             chaveHistoricoAberto = null;
             chaveEditandoPreco = null;
             chaveEditandoMarca = null;
@@ -3222,30 +3319,18 @@
             nomeEl.classList.toggle('truncate', !nomeItemExpandido);
             nomeEl.classList.toggle('break-words', nomeItemExpandido);
 
-            document.getElementById('detalheSubtitulo').innerText = dadosApp.modoFacil ? 'Modo Fácil' : `${catsTexto} • Ref: ${refTexto}`;
-            document.getElementById('bannerDetalheIcone').innerText = item.icone;
-            document.getElementById('bannerDetalheNome').innerText = item.nome;
-            document.getElementById('bannerDetalheMeta').innerText = dadosApp.modoFacil
-                ? 'Seus preços cadastrados abaixo'
-                : `${catsTexto} • Medida de Referência: ${refTexto}`;
-
-            const btnCompra = document.getElementById('btnToggleCompraDetalhe');
-            if (itemNaLista(item)) {
-                const corBg = dadosApp.modoFacil ? 'bg-[#6B5B95] border-[#6B5B95]' : 'bg-[#556B2F] border-[#556B2F]';
-                btnCompra.className = `w-full py-2.5 px-4 rounded-2xl border-2 ${corBg} text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition active:scale-[0.99]`;
-                btnCompra.innerHTML = `<i class="fa-solid fa-check"></i><span>NA LISTA DE COMPRAS (TOQUE P/ REMOVER)</span>`;
-            } else {
-                btnCompra.className = 'w-full py-2.5 px-4 rounded-2xl border-2 border-stone-200 bg-white text-[#556B2F] cor-primaria-texto font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xs transition active:scale-[0.99]';
-                btnCompra.innerHTML = `<i class="fa-solid fa-basket-shopping"></i><span>INCLUIR NA LISTA DE COMPRAS</span>`;
-            }
-
+            renderizarChipsDetalhe(item);
             const listaEl = document.getElementById('listaPrecosDetalhe');
             const ranking = obterRankingItem(item);
+            renderizarHeroDetalhe(item, ranking);
+            const temGraficos = !!(document.getElementById('graficoHistoricoItem').innerHTML || '').trim();
+            renderizarAbasDetalhe(ranking.length, temGraficos);
 
             if (ranking.length === 0) {
+                listaEl.className = '';
                 listaEl.innerHTML = `
                     <div class="bg-white rounded-2xl border border-dashed border-stone-300 p-6 text-center text-xs font-bold text-stone-400">
-                        Nenhum preço cadastrado ainda. Role para baixo para cadastrar o primeiro!
+                        Nenhum preço ainda. Toque em <strong>＋ Novo preço</strong> para cadastrar o primeiro.
                     </div>
                 `;
                 return;
@@ -3255,6 +3340,7 @@
             const contagemPorLoja = {};
             ranking.forEach(r => contagemPorLoja[r.local] = (contagemPorLoja[r.local] || 0) + 1);
 
+            listaEl.className = abaDetalhe === 'graficos' && temGraficos ? 'hidden' : 'bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs';
             listaEl.innerHTML = ranking.map((entry, index) => {
                 const ehPrimeiro = index === 0;
                 const pos = index + 1;
@@ -3263,6 +3349,24 @@
                 const editandoMarca = chaveEditandoMarca === entry.chave;
                 const embalagemTexto = formatarMedida(entry.quantidade, entry.unidade);
                 const mostrarSeloEmbalagem = !dadosApp.modoFacil && (contagemPorLoja[entry.local] > 1 || !mesmaMedidaEmbalagem(entry.quantidade, entry.unidade, item.quantidade, item.unidade));
+
+                let seloLinha = '';
+                if (ehPrimeiro) {
+                    const seg = ranking[1];
+                    if (seg && seg.precoRef > 0) {
+                        const ec = ((seg.precoRef - entry.precoRef) / seg.precoRef) * 100;
+                        seloLinha = ec >= 0.05
+                            ? `<span class="verde-ok inline-block px-2 py-0.5 rounded-full text-[10px] font-black whitespace-nowrap">↓ ${ec.toFixed(0)}% que o 2º</span>`
+                            : `<span class="inline-block px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[10px] font-black whitespace-nowrap">🟰 igual ao 2º</span>`;
+                    }
+                } else {
+                    const ant = ranking[index - 1];
+                    const df = ant.precoRef > 0 ? ((entry.precoRef - ant.precoRef) / ant.precoRef) * 100 : 0;
+                    seloLinha = Math.abs(df) < 0.05
+                        ? `<span class="inline-block px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[10px] font-black whitespace-nowrap">🟰 igual ao ${index}º</span>`
+                        : `<span class="vermelho-alta inline-block px-2 py-0.5 rounded-full text-[10px] font-black whitespace-nowrap">↑ ${df.toFixed(0)}% que o ${index}º</span>`;
+                }
+                const qtdRegistrosLoja = (item.historico || []).filter(h => (h.chave || gerarChaveEntrada(h.local, h.quantidade, h.unidade)) === entry.chave).length;
 
                 let badgePosicaoHtml = '';
                 if (ehPrimeiro) {
@@ -3366,6 +3470,13 @@
                 `) : '';
 
                 let blocoHistorico = '';
+                if (historicoAberto && dadosApp.modoFacil) {
+                    blocoHistorico = `
+                        <div id="painelHistoricoAberto" onclick="event.stopPropagation()" class="px-3.5 pb-3 pt-1 flex gap-2">
+                            <button type="button" onclick="abrirModalPrecoRapido(null, '${item.id}', '${escaparAtributoJs(entry.local)}')" class="flex-1 h-9 rounded-xl bg-[#EEF2E6] border border-[#556B2F]/25 text-[#3F5122] text-xs font-black">＋ Preço aqui</button>
+                            <button type="button" onclick="solicitarExclusaoPrecoEstabelecimento(event, '${chaveJs}')" class="flex-1 h-9 rounded-xl bg-rose-50 text-rose-600 text-xs font-black">Remover loja</button>
+                        </div>`;
+                }
                 if (historicoAberto && !dadosApp.modoFacil) {
                     const registrosHist = (item.historico || [])
                         .map((h, idxOriginal) => ({ ...h, idxOriginal }))
@@ -3451,8 +3562,8 @@
 
                     const outrosRanking = ranking.filter(o => o.chave !== entry.chave && o.precoRef > 0);
                     const comparacaoRanking = outrosRanking.length ? `
-                        <div class="rounded-xl border border-stone-200 p-2.5 space-y-1.5">
-                            <p class="text-[10px] font-black uppercase text-stone-500">Comparado aos outros do ranking • por ${refTexto}</p>
+                        <div class="bg-white rounded-xl border border-stone-200 p-2.5 space-y-1.5">
+                            <p class="text-[10px] font-black uppercase text-stone-500">Comparado aos outros • por ${refTexto}</p>
                             ${outrosRanking.map(o => {
                                 const pos = ranking.indexOf(o) + 1;
                                 const d = ((entry.precoRef - o.precoRef) / o.precoRef) * 100;
@@ -3460,70 +3571,46 @@
                                 const selo = Math.abs(d) < 0.05
                                     ? '<span class="px-2 py-0.5 rounded-full bg-stone-100 text-stone-600 text-[10px] font-black shrink-0">🟰 mesmo preço</span>'
                                     : d < 0
-                                        ? `<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-black shrink-0">↓ ${Math.abs(d).toFixed(1)}% mais barato</span>`
-                                        : `<span class="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 text-[10px] font-black shrink-0">↑ ${d.toFixed(1)}% mais caro</span>`;
+                                        ? `<span class="verde-ok px-2 py-0.5 rounded-full text-[10px] font-black shrink-0">↓ ${Math.abs(d).toFixed(1)}% mais barato</span>`
+                                        : `<span class="vermelho-alta px-2 py-0.5 rounded-full text-[10px] font-black shrink-0">↑ ${d.toFixed(1)}% mais caro</span>`;
                                 return `<div class="flex items-center justify-between gap-2">
                                     <span class="text-[11px] font-bold text-stone-700 truncate">vs ${nomeOutro} <span class="text-stone-400">${formatarMoeda(o.precoRef)}</span></span>${selo}</div>`;
                             }).join('')}
                         </div>` : '';
 
                     blocoHistorico = `
-                        <div id="painelHistoricoAberto" onclick="event.stopPropagation()" class="mt-2 bg-white rounded-2xl border border-stone-200 p-3 space-y-2 anim-fade-up">
-                            <div class="bg-stone-50 border border-stone-200/80 rounded-xl p-2.5">
-                                <p class="text-xs font-black text-stone-900 flex items-center gap-1.5">
-                                    <span>${item.icone}</span>
-                                    <span class="break-words">${escaparHtml(item.nome)}</span>
-                                </p>
-                                <p class="text-[11px] font-bold text-[#556B2F] mt-0.5">
-                                    Histórico em ${escaparHtml(entry.local)} • Ref: ${refTexto} • cada preço comparado com o anterior
-                                </p>
-                            </div>
+                        <div id="painelHistoricoAberto" onclick="event.stopPropagation()" class="bg-stone-50 border-t border-stone-200 px-3.5 py-3 space-y-2.5 anim-fade-up">
                             ${comparacaoRanking}
-                            <div class="divide-y divide-stone-100">${linhasHist}</div>
+                            ${mediaTexto ? `<p class="text-[11px] font-extrabold text-amber-800 leading-snug">${mediaTexto}</p>` : ''}
+                            ${blocoMarca}
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-stone-500">Histórico nesta loja</p>
+                                <div class="divide-y divide-stone-100">${linhasHist}</div>
+                            </div>
+                            <div class="flex gap-2 pt-0.5">
+                                <button type="button" onclick="abrirModalPrecoRapido(null, '${item.id}', '${escaparAtributoJs(entry.local)}')" class="flex-1 h-9 rounded-xl bg-[#EEF2E6] border border-[#556B2F]/25 text-[#3F5122] text-xs font-black active:scale-95">＋ Preço aqui</button>
+                                <button type="button" onclick="solicitarExclusaoPrecoEstabelecimento(event, '${chaveJs}')" class="flex-1 h-9 rounded-xl bg-rose-50 text-rose-600 text-xs font-black active:scale-95">Remover loja</button>
+                            </div>
                         </div>
                     `;
                 }
 
+                const posClasse = ehPrimeiro ? 'bg-[#556B2F] text-white' : 'bg-stone-100 text-stone-700';
+                const subLinha = [embalagemTexto, entry.marca ? escaparHtml(entry.marca) : '', qtdRegistrosLoja ? `${qtdRegistrosLoja} ${qtdRegistrosLoja === 1 ? 'registro' : 'registros'}` : '']
+                    .filter(Boolean).join(' • ');
                 return `
-                    <div>
-                        <div onclick="alternarHistoricoCard('${chaveJs}')" class="rounded-2xl p-3.5 shadow-xs cursor-pointer transition ${bordaCard}">
-                            <div class="flex items-start justify-between gap-2">
-                                <h5 class="text-sm sm:text-base font-black text-stone-900 leading-snug break-words flex-1 min-w-0">
-                                    ${pos}º. ${escaparHtml(entry.local)}
-                                </h5>
-                                <div class="flex items-start gap-1.5 shrink-0 text-right">
-                                    <div>
-                                        <p class="text-base sm:text-lg font-black ${ehPrimeiro ? 'cor-primaria-texto text-[#556B2F]' : 'text-stone-900'} leading-none">
-                                            ${formatarMoeda(dadosApp.modoFacil ? entry.preco : entry.precoRef)}
-                                        </p>
-                                        ${!dadosApp.modoFacil ? `<p class="text-[10px] font-bold text-stone-400 mt-0.5">p/ ${refTexto}</p>` : ''}
-                                    </div>
-                                    ${!dadosApp.modoFacil ? `<i class="fa-solid fa-chevron-${historicoAberto ? 'up' : 'down'} text-xs text-stone-400 mt-1 ml-0.5"></i>` : ''}
-                                </div>
+                    <div class="${index > 0 ? 'border-t border-stone-100' : ''}">
+                        <div onclick="alternarHistoricoCard('${chaveJs}')" class="flex items-center gap-2.5 px-3.5 py-3 cursor-pointer active:bg-stone-50">
+                            <span class="w-7 h-7 rounded-full ${posClasse} text-xs font-black flex items-center justify-center shrink-0">${pos}</span>
+                            <div class="min-w-0 flex-1">
+                                <p class="text-sm font-black text-stone-900 truncate">${escaparHtml(entry.local)}${badgePromoHtml ? ' <span class="align-middle text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-200 text-amber-950">PROMO</span>' : ''}</p>
+                                <p class="text-[11px] font-bold text-stone-400 truncate">${subLinha}</p>
                             </div>
-
-                            <div class="flex flex-wrap items-center gap-1.5 mt-2">
-                                ${badgePosicaoHtml}
-                                ${badgePromoHtml}
-                                ${badgeEmbHtml}
+                            <div class="text-right shrink-0">
+                                <p class="text-[15px] font-black ${ehPrimeiro ? 'text-[#556B2F]' : 'text-stone-900'} leading-tight">${formatarMoeda(dadosApp.modoFacil ? entry.preco : entry.precoRef)}</p>
+                                ${seloLinha && !dadosApp.modoFacil ? `<div class="mt-0.5">${seloLinha}</div>` : (!dadosApp.modoFacil ? `<p class="text-[10px] font-bold text-stone-400">p/ ${refTexto}</p>` : '')}
                             </div>
-
-                            <div class="flex items-end justify-between gap-2 mt-2">
-                                <div class="min-w-0 flex-1">
-                                    ${mediaTexto ? `<p class="text-xs font-extrabold text-amber-800 leading-snug">${mediaTexto}</p>` : ''}
-                                    ${blocoMarca}
-                                </div>
-                                <div class="flex items-center gap-1.5 shrink-0">
-                                    <button type="button" onclick="abrirEdicaoPrecoRapida(event, '${chaveJs}')" title="Adicionar novo preço ou embalagem" class="w-9 h-9 rounded-xl bg-white border border-stone-200 hover:border-[#556B2F] text-stone-700 flex items-center justify-center shadow-2xs transition active:scale-90">
-                                        <i class="fa-solid fa-plus text-sm"></i>
-                                    </button>
-                                    <button type="button" onclick="solicitarExclusaoPrecoEstabelecimento(event, '${chaveJs}')" title="Apagar preço deste estabelecimento" class="w-9 h-9 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200/70 text-rose-500 flex items-center justify-center transition active:scale-90">
-                                        <i class="fa-solid fa-trash-can text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            ${blocoEditarPreco}
+                            <span class="text-stone-400 text-xs shrink-0">${historicoAberto ? '▴' : '▾'}</span>
                         </div>
                         ${blocoHistorico}
                     </div>
@@ -4399,7 +4486,7 @@
             }).join('');
 
             const resumoTopo = `
-                <div class="cor-primaria-bg bg-[#556B2F] text-white rounded-3xl p-4 flex items-center justify-between gap-2 shadow-sm">
+                <div class="sup-escura cor-primaria-bg bg-[#556B2F] text-white rounded-3xl p-4 flex items-center justify-between gap-2 shadow-sm">
                     <div>
                         <span class="block text-[10px] font-bold uppercase text-amber-200">Previsão Total (${itensCompra.length} ${itensCompra.length === 1 ? 'item' : 'itens'} • ${r.unidades} un)</span>
                         <span class="text-2xl font-black tracking-tight">${formatarMoeda(r.total)}</span>
@@ -4544,7 +4631,7 @@
                     <div class="grid grid-cols-3 gap-2 items-end">
                         <div>
                             <label class="block text-[9px] font-black uppercase text-stone-400 mb-0.5">Peso / Qtd</label>
-                            <input type="number" step="any" min="0" inputmode="decimal" value="${escaparHtml(opt.qtd)}" oninput="atualizarCampoCalculadora(${opt.id}, 'qtd', this.value)" placeholder="Ex: 180" class="w-full h-9 bg-stone-50 border border-stone-200 rounded-xl px-2.5 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
+                            <input type="number" step="any" min="0" inputmode="decimal" value="${escaparHtml(opt.qtd)}" oninput="atualizarCampoCalculadora(${opt.id}, 'qtd', this.value)" placeholder="" class="w-full h-9 bg-stone-50 border border-stone-200 rounded-xl px-2.5 text-xs font-bold text-stone-800 focus:outline-none focus:border-amber-600">
                         </div>
                         <div>
                             <label class="block text-[9px] font-black uppercase text-stone-400 mb-0.5">Unidade</label>
@@ -4909,9 +4996,7 @@
                 if (!porLojaAgora.has(k) || e.precoRef < porLojaAgora.get(k).precoRef) porLojaAgora.set(k, e);
             });
             const agora = Array.from(porLojaAgora.values()).sort((a, b) => a.precoRef - b.precoRef);
-            let blocoComparacao = agora.length === 1
-                ? `<p class="text-[11px] font-bold text-stone-500">📊 Só há preço em ${escaparHtml(agora[0].local)}. Cadastre outra loja para comparar.</p>`
-                : '';
+            let blocoComparacao = '';
             if (agora.length >= 2) {
                 const min = agora[0].precoRef;
                 const max = agora[agora.length - 1].precoRef;
@@ -4958,10 +5043,7 @@
 
             let blocoEvolucao;
             if (!series.length) {
-                blocoEvolucao = `
-                    <div class="rounded-xl bg-stone-50 border border-dashed border-stone-300 p-2.5">
-                        <p class="text-[11px] font-bold text-stone-500 leading-snug">📈 A linha de evolução aparece quando a mesma loja tiver 2 ou mais preços registrados. Aí ela mostra quanto subiu ou caiu.</p>
-                    </div>`;
+                blocoEvolucao = '';
             } else {
                 const vis = series.flatMap(sr => sr.pts);
                 const W = 320, H = 170, L = 46, R = 50, T = 14, B = 26;
@@ -5028,7 +5110,7 @@
                     </div>`;
             }
 
-            if (!agora.length && pontos.length < 2) { box.innerHTML = ''; return; }
+            if (!blocoComparacao && !blocoEvolucao) { box.innerHTML = ''; return; }
             box.innerHTML = `
                 <div class="bg-white rounded-2xl border border-stone-200 p-3 space-y-4 shadow-xs">
                     ${blocoComparacao}
@@ -5912,6 +5994,115 @@
         }
 
 
+
+        // ================= PÁGINA DO ITEM: TOPO, DESTAQUE E ABAS =================
+        let abaDetalhe = 'lojas';
+
+        function renderizarChipsDetalhe(item) {
+            const box = document.getElementById('detalheChips');
+            if (!box) return;
+            if (dadosApp.modoFacil) { box.innerHTML = ''; return; }
+            const ch = 'px-2.5 py-1 rounded-full text-[11px] font-extrabold border';
+            box.innerHTML = obterCategoriasDoItem(item).map(c =>
+                `<button type="button" onclick="alternarPainelRefCat(event)" class="${ch} bg-white/10 border-white/20 text-white">${escaparHtml(c)}</button>`).join('')
+                + `<button type="button" onclick="alternarPainelRefCat(event)" class="${ch} border-dashed border-white/35 text-[#A3E635]">＋ categoria</button>`
+                + `<button type="button" onclick="alternarPainelRefCat(event)" class="${ch} bg-[#A3E635] border-transparent text-[#0B0F0A]">Ref: ${escaparHtml(formatarMedida(item.quantidade, item.unidade))} ✎</button>`;
+        }
+
+        function renderizarHeroDetalhe(item, ranking) {
+            const box = document.getElementById('heroDetalhe');
+            if (!box) return;
+            const naLista = itemNaLista(item);
+            const btnLista = `<button type="button" onclick="toggleCompraItemAtual()" class="h-11 rounded-2xl text-sm font-black flex items-center justify-center gap-1.5 active:scale-[0.98] ${naLista ? 'bg-[#EEF2E6] border-2 border-[#556B2F] text-[#3F5122]' : 'bg-[#EEF2E6] border border-[#556B2F]/25 text-[#3F5122]'}">🛒 ${naLista ? 'Na lista ✓' : 'Pôr na lista'}</button>`;
+            const btnPreco = `<button type="button" onclick="abrirModalPrecoRapido(null, '${item.id}')" class="h-11 rounded-2xl bg-[#556B2F] text-white text-sm font-black flex items-center justify-center gap-1.5 active:scale-[0.98]">＋ Novo preço</button>`;
+            const melhor = ranking[0];
+            if (!melhor) {
+                box.innerHTML = `
+                    <div class="bg-white rounded-3xl border border-stone-200 p-4 shadow-xs space-y-3">
+                        <p class="text-[10px] font-black uppercase text-stone-500">Melhor preço</p>
+                        <p class="text-sm font-bold text-stone-500">Ainda sem preço cadastrado.</p>
+                        <div class="grid gap-2" style="grid-template-columns:1.4fr 1fr">${btnPreco}${btnLista}</div>
+                    </div>`;
+                return;
+            }
+            const ref = formatarMedida(item.quantidade, item.unidade);
+            const regs = (item.historico || []).filter(h => (h.chave || gerarChaveEntrada(h.local, h.quantidade, h.unidade)) === melhor.chave);
+            const ultimo = regs[regs.length - 1];
+            const selos = [];
+            const seg = ranking[1];
+            if (seg && seg.precoRef > 0) {
+                const ec = ((seg.precoRef - melhor.precoRef) / seg.precoRef) * 100;
+                if (ec >= 0.05) selos.push(`<span class="verde-ok px-2 py-1 rounded-full text-[11px] font-black">↓ ${ec.toFixed(0)}% mais barato que o 2º</span>`);
+            }
+            if (regs.length >= 2) {
+                const ini = calcularPrecoNaReferencia(regs[0].preco, regs[0].quantidade, regs[0].unidade, item.quantidade, item.unidade);
+                const fim = calcularPrecoNaReferencia(ultimo.preco, ultimo.quantidade, ultimo.unidade, item.quantidade, item.unidade);
+                const v = ini > 0 ? ((fim - ini) / ini) * 100 : 0;
+                const desde = String(regs[0].data || '').slice(0, 5);
+                if (v <= -1) selos.push(`<span class="verde-ok px-2 py-1 rounded-full text-[11px] font-black">📉 caiu ${Math.abs(v).toFixed(0)}% desde ${desde}</span>`);
+                else if (v >= 1) selos.push(`<span class="vermelho-alta px-2 py-1 rounded-full text-[11px] font-black">📈 subiu ${v.toFixed(0)}% desde ${desde}</span>`);
+            }
+            const pago = !mesmaMedidaEmbalagem(melhor.quantidade, melhor.unidade, item.quantidade, item.unidade)
+                ? `Pago: ${formatarMedida(melhor.quantidade, melhor.unidade)} por ${formatarMoeda(melhor.preco)}` : '';
+            const sub2 = [pago, ultimo && ultimo.data ? String(ultimo.data).slice(0, 5) : '', melhor.promocao ? 'em promoção' : ''].filter(Boolean).join(' • ');
+            box.innerHTML = `
+                <div class="bg-white rounded-3xl border border-stone-200 p-4 shadow-xs">
+                    <p class="text-[10px] font-black uppercase text-stone-500">Melhor preço</p>
+                    <div class="flex items-baseline flex-wrap gap-x-2">
+                        <span class="text-[32px] font-black text-[#556B2F] leading-tight">${formatarMoeda(dadosApp.modoFacil ? melhor.preco : melhor.precoRef)}</span>
+                        <span class="text-xs font-bold text-stone-500">${dadosApp.modoFacil ? '' : 'por ' + escaparHtml(ref) + ' • '}${escaparHtml(melhor.local)}</span>
+                    </div>
+                    ${sub2 ? `<p class="text-[11px] font-bold text-stone-400">${escaparHtml(sub2)}</p>` : ''}
+                    ${selos.length ? `<div class="flex flex-wrap gap-1.5 mt-2">${selos.join('')}</div>` : ''}
+                    <div class="grid gap-2 mt-3" style="grid-template-columns:1.4fr 1fr">${btnPreco}${btnLista}</div>
+                </div>`;
+        }
+
+        function renderizarAbasDetalhe(qtdLojas, temGraficos) {
+            const box = document.getElementById('abasDetalhe');
+            const graf = document.getElementById('graficoHistoricoItem');
+            if (!box || !graf) return;
+            if (!temGraficos || dadosApp.modoFacil) {
+                abaDetalhe = 'lojas';
+                box.innerHTML = qtdLojas ? `<p class="text-[10px] font-black uppercase text-stone-500 px-1">Lojas (${qtdLojas})</p>` : '';
+                graf.classList.add('hidden');
+                return;
+            }
+            const b = (id, txt) => `<button type="button" onclick="trocarAbaDetalhe('${id}')" class="py-2 rounded-xl text-[13px] font-black ${abaDetalhe === id ? 'bg-white text-[#3F5122] shadow-sm' : 'text-stone-500'}">${txt}</button>`;
+            box.innerHTML = `<div class="grid grid-cols-2 gap-1 p-1 rounded-2xl bg-stone-200/70">${b('lojas', '📋 Lojas (' + qtdLojas + ')')}${b('graficos', '📈 Gráficos')}</div>`;
+            graf.classList.toggle('hidden', abaDetalhe !== 'graficos');
+        }
+
+        function trocarAbaDetalhe(aba) {
+            abaDetalhe = aba;
+            renderizarDetalhesItem();
+        }
+
+        // ================= TEMA CLARO / ESCURO =================
+        function aplicarTema() {
+            const pref = dadosApp.tema || 'auto';
+            const escuroSistema = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const escuro = pref === 'escuro' || (pref === 'auto' && escuroSistema);
+            document.documentElement.classList.toggle('tema-escuro', escuro);
+            const meta = document.querySelector('meta[name="theme-color"]');
+            if (meta) meta.setAttribute('content', escuro ? '#1A2117' : '#141A12');
+            const b = document.getElementById('btnTema');
+            if (b) { b.innerText = pref === 'auto' ? '🌗' : (escuro ? '🌙' : '☀️'); b.title = 'Tema: ' + ({ auto: 'automático', claro: 'claro', escuro: 'escuro' })[pref]; }
+        }
+
+        function alternarTema() {
+            const ordem = ['auto', 'escuro', 'claro'];
+            const atual = dadosApp.tema || 'auto';
+            dadosApp.tema = ordem[(ordem.indexOf(atual) + 1) % ordem.length];
+            salvarDadosLocais();
+            aplicarTema();
+            mostrarToast({ auto: '🌗 Tema automático (segue o celular)', escuro: '🌙 Modo noturno', claro: '☀️ Modo claro' }[dadosApp.tema]);
+        }
+
+        if (window.matchMedia) {
+            try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => aplicarTema()); } catch (_) {}
+        }
+
         // ================= FAVORITOS =================
         function atualizarBotaoFiltroFavoritos() {
             const b = document.getElementById('btnFiltroFavoritos');
@@ -6606,6 +6797,7 @@
                     normalizarDadosSalvos();
                     dadosApp.migCategoriasProdutosV1 = !!parsed.migCategoriasProdutosV1;
                     migrarCategoriasProdutosV1();
+            migrarRemoverEmbalados();
                     salvarDadosLocais();
                     aplicarModoFacilUI();
                     aplicarBotoesLayoutUI();
