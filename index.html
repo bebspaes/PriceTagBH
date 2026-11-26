@@ -2385,6 +2385,7 @@
             }
             if (!voltandoAba && typeof pilhaAbas !== 'undefined' && abaAtual && abaAtual !== nomeAba) {
                 pilhaAbas.push(abaAtual);
+                if (typeof registrarNivelHistorico === 'function') registrarNivelHistorico();
                 if (pilhaAbas.length > 20) pilhaAbas.shift();
             }
             abaAtual = nomeAba;
@@ -3017,6 +3018,7 @@
 
         // ================= MODO DE SELEÇÃO MÚLTIPLA (SEGURAR ITEM) =================
         function ativarModoSelecaoComItem(id) {
+            if (!modoSelecaoAtivo && typeof registrarNivelHistorico === 'function') registrarNivelHistorico();
             modoSelecaoAtivo = true;
             idsSelecionados.add(id);
             atualizarUISelecaoMultipla();
@@ -5971,29 +5973,55 @@
             return false;
         }
 
+        // Cada janela/aba aberta pelo toque ganha uma entrada no histórico do navegador.
+        // Assim o "voltar" do celular fecha uma coisa por vez (o Chrome ignora entradas criadas sem toque).
+        let nivelHistorico = 0;
+        let navegandoPorVoltar = false;
+
+        function registrarNivelHistorico() {
+            if (navegandoPorVoltar || !historicoAtivo) return;
+            nivelHistorico++;
+            try { history.pushState({ priceTag: nivelHistorico }, ''); } catch (_) {}
+        }
+
+        let historicoAtivo = false;
         function instalarBotaoVoltar() {
             if (!window.history || !history.pushState || estaEmVisualizador()) return;
             try {
-                history.replaceState({ priceTag: 'base' }, '');
-                history.pushState({ priceTag: 'app' }, '');
+                history.replaceState({ priceTag: -1 }, '');
+                history.pushState({ priceTag: 0 }, ''); // guarda: o 1º voltar no Principal só avisa
             } catch (_) { return; }
-            window.addEventListener('popstate', () => {
-                if (voltarDentroDoApp()) {
-                    history.pushState({ priceTag: 'app' }, '');
+            historicoAtivo = true;
+
+            // Janelas que, ao abrir, viram um passo do "voltar"
+            const ids = ['modalConfirmacao', 'modalCorteNota', 'modalCategorizarMassa', 'modalSalvarCalc', 'modalPerfilLoja',
+                'modalListaLojas', 'modalFinalizarCompra', 'modalPrecoRapido', 'modalDetalhesItem', 'modalGrupo', 'modalBackup', 'modalInstalar'];
+            const obs = new MutationObserver(muts => {
+                muts.forEach(m => {
+                    const el = m.target;
+                    const estavaOculto = String(m.oldValue || '').split(/\s+/).includes('hidden');
+                    if (estavaOculto && !el.classList.contains('hidden')) registrarNivelHistorico();
+                });
+            });
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) obs.observe(el, { attributes: true, attributeFilter: ['class'], attributeOldValue: true });
+            });
+
+            window.addEventListener('popstate', (e) => {
+                const n = (e.state && typeof e.state.priceTag === 'number') ? e.state.priceTag : -1;
+                nivelHistorico = Math.max(0, n);
+                navegandoPorVoltar = true;
+                let fez = false;
+                try { fez = voltarDentroDoApp(); } finally { navegandoPorVoltar = false; }
+                if (fez) {
+                    if (n < 0) { nivelHistorico = 0; try { history.pushState({ priceTag: 0 }, ''); } catch (_) {} }
                     return;
                 }
-                if (!avisoSairAtivo) {
-                    avisoSairAtivo = true;
-                    mostrarToast('Toque em voltar de novo para sair do app.');
-                    history.pushState({ priceTag: 'app' }, '');
-                    setTimeout(() => { avisoSairAtivo = false; }, 2500);
-                    return;
-                }
-                history.back(); // segundo toque: sai do app
+                if (n >= 0) { history.back(); return; } // entrada que sobrou de algo já fechado pelo X
+                mostrarToast('Toque em voltar de novo para sair do app.');
             });
         }
-
-
 
         // ================= PÁGINA DO ITEM: TOPO, DESTAQUE E ABAS =================
         let abaDetalhe = 'lojas';
