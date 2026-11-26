@@ -2612,6 +2612,15 @@
             const btnLimpar = document.getElementById('btnLimparBusca');
             if (input && btnLimpar) btnLimpar.classList.toggle('hidden', input.value.trim().length === 0);
             renderizarProdutos();
+            subirParaResultados(null); // resultados aparecem logo abaixo dos filtros, sem rolar na mão
+        }
+
+        // Ao digitar na busca do rodapé, leva a tela até o começo dos resultados
+        function subirParaResultados(el) {
+            const alvoTopo = el
+                ? Math.max(0, el.getBoundingClientRect().top + window.scrollY - (document.querySelector('header')?.offsetHeight || 0) - 12)
+                : 0;
+            if (Math.abs(window.scrollY - alvoTopo) > 4) window.scrollTo({ top: alvoTopo, behavior: 'auto' });
         }
 
         function limparBusca() {
@@ -4025,6 +4034,7 @@
                 btnLimpar.classList.toggle('hidden', input.value.trim().length === 0);
             }
             renderizarCatalogoPronto();
+            subirParaResultados(document.getElementById('filtrosGrupoCatalogoPronto') || document.getElementById('listaCatalogoPronto'));
         }
 
         function limparBuscaCatalogoPronto() {
