@@ -187,7 +187,7 @@
                         🏷️
                     </div>
                     <div class="min-w-0">
-                        <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight truncate">Price Tag</h1>
+                        <h1 class="text-sm sm:text-base font-black tracking-tight leading-tight whitespace-nowrap">Price Tag</h1>
                         <p id="subtituloModo" class="text-[10px] font-bold text-amber-200 leading-tight truncate">Modo Completo</p>
                     </div>
                 </div>
@@ -199,18 +199,17 @@
                         <span id="textoBtnModoFacil">Modo Fácil</span>
                     </button>
 
-                    <!-- Utilidades compactas (ocultas no Modo Fácil) -->
-                    <button type="button" id="btnTema" onclick="alternarTema()" title="Tema claro/escuro" class="w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-sm transition active:scale-95">🌙</button>
+                    <!-- Utilidades: lojas à mão, o resto no menu ⋯ -->
                     <button type="button" onclick="abrirListaLojas()" title="Minhas lojas" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-sm transition active:scale-95">🏪</button>
-                    <button type="button" onclick="abrirModalGrupo()" title="Grupo Familiar" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-xs transition active:scale-95">
-                        <i class="fa-solid fa-users"></i>
-                    </button>
-                    <button type="button" onclick="abrirModalBackup()" title="Backup e Excel" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-xs transition active:scale-95">
-                        <i class="fa-solid fa-download"></i>
-                    </button>
-                    <button type="button" onclick="abrirModalInstalar()" title="Instalar no Celular" class="ocultar-modo-facil w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-xs transition active:scale-95">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                    </button>
+                    <div class="relative">
+                        <button type="button" onclick="alternarMenuTopo(event)" title="Mais opções" class="w-8 h-8 rounded-xl bg-white/12 hover:bg-white/22 flex items-center justify-center text-lg font-black leading-none transition active:scale-95">⋯</button>
+                        <div id="menuTopo" onclick="event.stopPropagation()" class="hidden absolute right-0 top-10 z-50 w-56 bg-white rounded-2xl shadow-2xl border border-stone-200 p-1.5">
+                            <button type="button" onclick="alternarTema()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold text-stone-800 hover:bg-stone-100"><span id="btnTema" class="w-6 text-center">🌗</span><span id="rotuloTema">Tema</span></button>
+                            <button type="button" onclick="fecharMenuTopo(); abrirModalGrupo()" class="ocultar-modo-facil w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold text-stone-800 hover:bg-stone-100"><span class="w-6 text-center">👥</span>Grupo familiar</button>
+                            <button type="button" onclick="fecharMenuTopo(); abrirModalBackup()" class="ocultar-modo-facil w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold text-stone-800 hover:bg-stone-100"><span class="w-6 text-center">💾</span>Backup e Excel</button>
+                            <button type="button" onclick="fecharMenuTopo(); abrirModalInstalar()" class="ocultar-modo-facil w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left text-sm font-bold text-stone-800 hover:bg-stone-100"><span class="w-6 text-center">📲</span>Instalar no celular</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -647,6 +646,9 @@
                     <button type="button" id="btnLayout-lista-compacta" onclick="definirLayout('lista-compacta')" title="Lista Compacta" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs transition text-stone-500 hover:bg-stone-100">
                         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
+                    <button type="button" id="btnLayout-por-loja" onclick="definirLayout('por-loja')" title="Onde comprar: itens agrupados pela loja mais barata" class="w-8 h-8 rounded-xl flex items-center justify-center text-xs transition text-stone-500 hover:bg-stone-100">
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 01-6 0 3 3 0 01-6 0 3 3 0 01-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/></svg>
+                    </button>
                 </div>
             </div>
             <!-- Busca do Catálogo Pronto (aba Cadastro) -->
@@ -1037,6 +1039,7 @@
             </div>
             <div class="p-4 space-y-3 overflow-y-auto">
                 <div id="statsPerfilLoja" class="grid grid-cols-3 gap-2"></div>
+                <div id="itensMaisBaratosLoja"></div>
                 <label class="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 cursor-pointer">
                     <input type="checkbox" id="lojaSeguindo" class="w-4 h-4 accent-[#556B2F]">
                     <span class="text-xs font-black text-amber-900">⭐ Seguir esta loja (aparece primeiro nas sugestões)</span>
@@ -2012,7 +2015,7 @@
             }
 
             // Garantir que no Modo Completo existam apenas as 2 listas
-            if (dadosApp.layoutAtual !== 'lista-detalhada' && dadosApp.layoutAtual !== 'lista-compacta') {
+            if (!['lista-detalhada', 'lista-compacta', 'por-loja'].includes(dadosApp.layoutAtual)) {
                 dadosApp.layoutAtual = 'lista-detalhada';
             }
 
@@ -2344,6 +2347,13 @@
                 instalarBotaoVoltar();
                 atualizarBotaoFiltroFavoritos();
                 aplicarTema();
+                setTimeout(() => {
+                    if (dadosApp.dicaPorLojaVista || dadosApp.layoutAtual === 'por-loja' || dadosApp.modoFacil) return;
+                    if (dadosApp.itens.filter(i => !i.somenteLista && obterRankingItem(i).length).length < 3) return;
+                    dadosApp.dicaPorLojaVista = true;
+                    salvarDadosLocais();
+                    mostrarToast('Novo: veja onde cada item sai mais barato, agrupado por loja.', () => { selecionarAba('principal'); definirLayout('por-loja'); }, '👆 Toque para ver "Por loja" (botão 🏪 no rodapé)');
+                }, 1500);
                 document.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         fecharTodosDropdownsFiltro();
@@ -2463,7 +2473,7 @@
         }
 
         function definirLayout(novoLayout) {
-            if (novoLayout !== 'lista-detalhada' && novoLayout !== 'lista-compacta') {
+            if (!['lista-detalhada', 'lista-compacta', 'por-loja'].includes(novoLayout)) {
                 novoLayout = 'lista-detalhada';
             }
             dadosApp.layoutAtual = novoLayout;
@@ -2473,7 +2483,7 @@
         }
 
         function aplicarBotoesLayoutUI() {
-            ['lista-detalhada', 'lista-compacta'].forEach(l => {
+            ['lista-detalhada', 'lista-compacta', 'por-loja'].forEach(l => {
                 const btn = document.getElementById(`btnLayout-${l}`);
                 if (!btn) return;
                 if (dadosApp.layoutAtual === l) {
@@ -2499,6 +2509,7 @@
         }
 
         function fecharTodosDropdownsFiltro() {
+            fecharMenuTopo();
             document.getElementById('dropdownFiltroCategoria')?.classList.add('hidden');
             document.getElementById('dropdownFiltroLoja1')?.classList.add('hidden');
         }
@@ -2506,7 +2517,7 @@
         // Toque fora de um filtro aberto: só fecha o filtro, sem abrir o item que estava embaixo
         let engolirProximoClique = false;
         function algumDropdownFiltroAberto() {
-            return ['dropdownFiltroCategoria', 'dropdownFiltroLoja1'].some(id => {
+            return ['dropdownFiltroCategoria', 'dropdownFiltroLoja1', 'menuTopo'].some(id => {
                 const el = document.getElementById(id);
                 return el && !el.classList.contains('hidden');
             });
@@ -2516,6 +2527,8 @@
                 if (!algumDropdownFiltroAberto()) return;
                 const box = document.getElementById('filtrosSecundariosBox');
                 if (box && box.contains(e.target)) return; // tocou nos próprios filtros
+                const menu = document.getElementById('menuTopo');
+                if (menu && menu.parentElement && menu.parentElement.contains(e.target)) return; // tocou no menu ⋯
                 fecharTodosDropdownsFiltro();
                 engolirProximoClique = true;
                 ultimoGestoTempo = Date.now(); // impede swipe/abrir item com este toque
@@ -2690,6 +2703,10 @@
                 // Modo Fácil = Grade de Ícones Pequenos
                 container.className = 'grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full';
                 container.innerHTML = filtrados.map(item => renderCardModoFacilIconesPequenos(item)).join('');
+            } else if (dadosApp.layoutAtual === 'por-loja') {
+                container.className = 'flex flex-col gap-2.5 w-full';
+                container.innerHTML = renderizarPrincipalPorLoja(filtrados);
+                return;
             } else if (dadosApp.layoutAtual === 'lista-compacta') {
                 container.className = 'flex flex-col gap-2 w-full';
                 container.innerHTML = filtrados.map(item => renderCardListaCompacta(item)).join('');
@@ -5523,6 +5540,17 @@
                 <div class="rounded-xl bg-[#EEF2E6] p-2 text-center"><p class="text-base font-black text-stone-900">${st.produtos}</p><p class="text-[9px] font-black uppercase text-[#556B2F]">produtos</p></div>
                 <div class="rounded-xl bg-amber-50 p-2 text-center"><p class="text-base font-black text-stone-900">${st.primeiro}</p><p class="text-[9px] font-black uppercase text-amber-800">mais barato</p></div>
                 <div class="rounded-xl bg-stone-100 p-2 text-center"><p class="text-xs font-black text-stone-900 mt-1">${st.ultima || '—'}</p><p class="text-[9px] font-black uppercase text-stone-500">último preço</p></div>`;
+            const baratos = itensMaisBaratosNaLoja(nome, false);
+            document.getElementById('itensMaisBaratosLoja').innerHTML = baratos.length ? `
+                <details class="bg-[#EEF2E6] border border-[#556B2F]/25 rounded-xl px-3 py-2">
+                    <summary class="text-xs font-black text-[#3F5122] cursor-pointer">🏆 Mais barato aqui (${baratos.length}) — ver itens</summary>
+                    <div class="pt-2 space-y-1">${baratos.map(i => {
+                        const m = obterRankingItem(i)[0];
+                        return `<button type="button" onclick="fecharPerfilLoja(); fecharListaLojas(); abrirModalDetalhes('${i.id}')" class="w-full flex items-center justify-between gap-2 bg-white rounded-lg px-2.5 py-1.5 text-left">
+                            <span class="text-xs font-bold text-stone-800 truncate">${i.icone} ${escaparHtml(i.nome)}</span>
+                            <span class="text-xs font-black text-stone-900 shrink-0">${formatarMoeda(m.preco)}</span></button>`;
+                    }).join('')}</div>
+                </details>` : '';
             atualizarAtalhosLoja();
             document.getElementById('modalPerfilLoja').classList.remove('hidden');
         }
@@ -6125,7 +6153,9 @@
             const meta = document.querySelector('meta[name="theme-color"]');
             if (meta) meta.setAttribute('content', escuro ? '#1A2117' : '#141A12');
             const b = document.getElementById('btnTema');
-            if (b) { b.innerText = pref === 'auto' ? '🌗' : (escuro ? '🌙' : '☀️'); b.title = 'Tema: ' + ({ auto: 'automático', claro: 'claro', escuro: 'escuro' })[pref]; }
+            if (b) b.innerText = pref === 'auto' ? '🌗' : (escuro ? '🌙' : '☀️');
+            const rt = document.getElementById('rotuloTema');
+            if (rt) rt.innerText = 'Tema: ' + ({ auto: 'automático', claro: 'claro', escuro: 'noturno' })[pref];
         }
 
         function alternarTema() {
@@ -6139,6 +6169,130 @@
 
         if (window.matchMedia) {
             try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => aplicarTema()); } catch (_) {}
+        }
+
+
+        // ================= PRINCIPAL "POR LOJA" (onde cada item sai mais barato) =================
+        const lojasAbertasPrincipal = new Set();
+
+        function agruparItensPorMelhorLoja(itens) {
+            const grupos = new Map();
+            const semPreco = [];
+            itens.forEach(item => {
+                const ranking = obterRankingItem(item);
+                if (!ranking.length) { semPreco.push(item); return; }
+                const m = ranking[0];
+                const k = normalizarTextoBusca(m.local);
+                if (!grupos.has(k)) grupos.set(k, { local: m.local, itens: [], total: 0 });
+                const g = grupos.get(k);
+                g.itens.push({ item, melhor: m, segundo: ranking[1] || null });
+                g.total += m.preco;
+            });
+            const lista = Array.from(grupos.values()).sort((a, b) => b.itens.length - a.itens.length || a.local.localeCompare(b.local, 'pt-BR'));
+            lista.forEach(g => g.itens.sort((a, b) => a.item.nome.localeCompare(b.item.nome, 'pt-BR')));
+            return { lista, semPreco };
+        }
+
+        function renderizarPrincipalPorLoja(itens) {
+            const { lista, semPreco } = agruparItensPorMelhorLoja(itens);
+            const lojaAqui = normalizarTextoBusca(dadosApp.lojaAtualCompra || '');
+            const intro = `
+                <div class="bg-white/80 border border-stone-200 rounded-2xl px-3 py-2 text-[11px] font-bold text-stone-500 leading-snug">
+                    🏪 <strong class="text-stone-800">Onde comprar:</strong> cada item aparece na loja em que está mais barato. Os filtros e a busca também valem aqui.
+                </div>`;
+            const cards = lista.map(g => {
+                const aberto = lojasAbertasPrincipal.has(g.local) || lista.length === 1;
+                const perfil = obterPerfilLoja(g.local);
+                const det = [perfil.tipo, perfil.bairro].filter(Boolean).join(' • ');
+                const nomeJs = escaparAtributoJs(g.local);
+                const aqui = lojaAqui && normalizarTextoBusca(g.local) === lojaAqui;
+                const linhas = g.itens.map(({ item, melhor, segundo }) => {
+                    let selo = '';
+                    if (segundo && segundo.precoRef > 0) {
+                        const ec = ((segundo.precoRef - melhor.precoRef) / segundo.precoRef) * 100;
+                        if (ec >= 0.5) selo = `<span class="verde-ok px-1.5 py-0.5 rounded-full text-[10px] font-black whitespace-nowrap">↓ ${ec.toFixed(0)}%</span>`;
+                    }
+                    return `
+                        <button type="button" onclick="abrirModalDetalhes('${item.id}')" class="w-full flex items-center gap-2 bg-white rounded-xl border border-stone-200 px-2.5 py-2 text-left active:scale-[0.99]">
+                            <span class="text-lg shrink-0">${item.icone}</span>
+                            <span class="flex-1 min-w-0">
+                                <span class="block text-xs font-black text-stone-900 truncate">${item.favorito ? '<span class="text-amber-500">★</span> ' : ''}${escaparHtml(item.nome)}</span>
+                                <span class="block text-[10px] font-bold text-stone-400 truncate">${escaparHtml(formatarMedida(melhor.quantidade, melhor.unidade))}${segundo ? ' • 2º: ' + escaparHtml(segundo.local) : ''}</span>
+                            </span>
+                            <span class="text-right shrink-0">
+                                <span class="block text-xs font-black text-stone-900">${formatarMoeda(melhor.preco)}</span>
+                                ${selo}
+                            </span>
+                            ${itemNaLista(item) ? '<span class="text-[11px] shrink-0" title="Na lista">🛒</span>' : ''}
+                        </button>`;
+                }).join('');
+                return `
+                    <div class="bg-white rounded-2xl border ${aqui ? 'border-2 border-[#556B2F]' : 'border-stone-200'} shadow-xs overflow-hidden">
+                        <button type="button" onclick="alternarLojaPrincipal('${nomeJs}')" class="w-full flex items-center justify-between gap-2 px-3.5 py-3 text-left">
+                            <span class="min-w-0">
+                                <span class="block text-sm font-black text-[#556B2F] truncate">📍 ${perfil.seguindo ? '⭐ ' : ''}${escaparHtml(g.local)}${aqui ? ' • você está aqui' : ''}</span>
+                                <span class="block text-[11px] font-bold text-stone-400 truncate">${g.itens.length} ${g.itens.length === 1 ? 'item mais barato' : 'itens mais baratos'} aqui${det ? ' • ' + escaparHtml(det) : ''}</span>
+                            </span>
+                            <span class="flex items-center gap-1.5 shrink-0">
+                                <span class="text-sm font-black text-stone-900">${formatarMoeda(g.total)}</span>
+                                <span class="text-stone-400 text-xs">${aberto ? '▴' : '▾'}</span>
+                            </span>
+                        </button>
+                        ${aberto ? `
+                            <div class="bg-stone-50 border-t border-stone-200 px-3 py-3 space-y-1.5">
+                                ${linhas}
+                                <div class="grid grid-cols-3 gap-1.5 pt-1.5">
+                                    <button type="button" onclick="porItensDaLojaNaLista('${nomeJs}')" class="py-2 rounded-xl bg-[#556B2F] text-white text-[11px] font-black">🛒 Pôr na lista</button>
+                                    <button type="button" onclick="estouNaLojaPeloPrincipal('${nomeJs}')" class="py-2 rounded-xl bg-[#EEF2E6] border border-[#556B2F]/25 text-[#3F5122] text-[11px] font-black">📍 Estou aqui</button>
+                                    <button type="button" onclick="abrirPerfilLoja('${nomeJs}')" class="py-2 rounded-xl bg-white border border-stone-200 text-stone-700 text-[11px] font-black">🏪 Perfil</button>
+                                </div>
+                            </div>` : ''}
+                    </div>`;
+            }).join('');
+            const blocoSemPreco = semPreco.length ? `
+                <div class="bg-white rounded-2xl border border-dashed border-stone-300 px-3.5 py-3">
+                    <p class="text-xs font-black text-stone-600">Sem preço ainda (${semPreco.length})</p>
+                    <p class="text-[11px] font-semibold text-stone-400 mt-0.5 leading-snug">${semPreco.map(i => escaparHtml(i.nome)).join(' • ')}</p>
+                </div>` : '';
+            return intro + cards + blocoSemPreco;
+        }
+
+        function alternarLojaPrincipal(loja) {
+            if (lojasAbertasPrincipal.has(loja)) lojasAbertasPrincipal.delete(loja); else lojasAbertasPrincipal.add(loja);
+            renderizarProdutos();
+        }
+
+        function itensMaisBaratosNaLoja(loja, respeitarFiltros) {
+            const base = respeitarFiltros ? obterItensFiltrados() : dadosApp.itens.filter(i => !i.somenteLista);
+            const k = normalizarTextoBusca(loja);
+            return base.filter(i => { const r = obterRankingItem(i); return r.length && normalizarTextoBusca(r[0].local) === k; });
+        }
+
+        function porItensDaLojaNaLista(loja) {
+            const itens = itensMaisBaratosNaLoja(loja, true);
+            let novos = 0;
+            itens.forEach(i => { if (!itemNaLista(i)) { setItemNaLista(i, true); novos++; } });
+            salvarDadosLocais();
+            atualizarBadgeCompras();
+            renderizarProdutos();
+            mostrarToast(novos ? `🛒 ${novos} ${novos === 1 ? 'item entrou' : 'itens entraram'} em "${obterListaAtiva().nome}"` : 'Esses itens já estão na lista.',
+                () => selecionarAba('compras'), '👆 Toque para abrir a Lista de Compras');
+        }
+
+        function estouNaLojaPeloPrincipal(loja) {
+            selecionarAba('compras');
+            definirLojaAtual(loja);
+            window.scrollTo(0, 0);
+        }
+
+        // ================= MENU "⋯" DO CABEÇALHO =================
+        function alternarMenuTopo(event) {
+            if (event) event.stopPropagation();
+            const m = document.getElementById('menuTopo');
+            if (m) m.classList.toggle('hidden');
+        }
+        function fecharMenuTopo() {
+            document.getElementById('menuTopo')?.classList.add('hidden');
         }
 
         // ================= FAVORITOS =================
@@ -6829,7 +6983,7 @@
                         return;
                     }
                     dadosApp = Object.assign(dadosApp, parsed);
-                    if (dadosApp.layoutAtual !== 'lista-detalhada' && dadosApp.layoutAtual !== 'lista-compacta') {
+                    if (!['lista-detalhada', 'lista-compacta', 'por-loja'].includes(dadosApp.layoutAtual)) {
                         dadosApp.layoutAtual = 'lista-detalhada';
                     }
                     normalizarDadosSalvos();
